@@ -11,13 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
+import com.mfc.memberservice.common.sms.SmsUtil;
 import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.Role;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.req.SignUpReqDto;
+import com.mfc.memberservice.member.dto.req.SmsReqDto;
 import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
+import com.mfc.memberservice.member.infrastructure.SmsRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
 import com.mfc.memberservice.style.domain.FavoriteStyle;
 import com.mfc.memberservice.style.infrastructure.FavoriteStyleRepository;
@@ -32,8 +35,11 @@ public class AuthServiceImpl implements AuthService {
 	private final UserRepository userRepository;
 	private final PartnerRepository partnerRepository;
 	private final FavoriteStyleRepository favoriteStyleRepository;
+	private final SmsRepository smsRepository;
 
-	private final BCryptPasswordEncoder encoder;;
+	private final SmsUtil smsUtil;
+
+	private final BCryptPasswordEncoder encoder;
 
 	@Override
 	public void signUp(SignUpReqDto dto, String role) {
@@ -52,6 +58,29 @@ public class AuthServiceImpl implements AuthService {
 		} else { // 이외의 파라미터 : 예외 발생
 			throw new BaseException(NO_EXIT_ROLE);
 		}
+	}
+
+	@Override
+	public void sendSms(SmsReqDto dto) {
+		String to = dto.getPhone();
+		if(isNew(to)) {
+			throw new BaseException(DUPLICATED_MEMBERS);
+		}
+
+		int random = (int) (Math.random() * 900000) + 1000;
+		String code = String.valueOf(random);
+
+		smsUtil.sendSms(to, code); // 문자 전송
+		smsRepository.createSmsCode(to, code); // 인증번호 redis에 저장
+	}
+
+	@Override
+	public void verifyCode(SmsReqDto dto) {
+		if(!isVerify(dto)) {
+			throw new BaseException(MESSAGE_VALID_FAILED);
+		}
+
+		smsRepository.removeSmsCode(dto.getPhone());
 	}
 
 	// 회원 공통 정보 저장 (유저, 파트너)
@@ -92,5 +121,17 @@ public class AuthServiceImpl implements AuthService {
 								.uuid(uuid)
 								.styleId(i)
 								.build()));
+	}
+
+	// 중복 회원 검증
+	private boolean isNew(String phone) {
+		return memberRepository.findByPhone(phone).isPresent();
+	}
+
+	// 인증번호 검증
+	private boolean isVerify(SmsReqDto dto) {
+		return smsRepository.hasKey(dto.getPhone()) &&
+				smsRepository.getSmsCode(dto.getPhone())
+						.equals(dto.getCode());
 	}
 }
