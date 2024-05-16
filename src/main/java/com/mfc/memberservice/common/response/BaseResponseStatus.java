@@ -34,7 +34,7 @@ public enum BaseResponseStatus {
 	WRONG_AUTH_CODE(HttpStatus.UNAUTHORIZED, false, 2007, "인증번호가 일치하지 않습니다."),
 
 	// Members
-	DUPLICATE_EMAIL(HttpStatus.CONFLICT, false, 2100, "사용중인 이메일입니다."),
+	DUPLICATED_NICKNAME(HttpStatus.CONFLICT, false, 2100, "사용중인 닉네임입니다."),
 	DUPLICATED_MEMBERS(HttpStatus.CONFLICT, false, 409, "이미 가입된 멤버입니다."),
 	MASSAGE_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 2102, "인증번호 전송에 실패했습니다."),
 	MESSAGE_VALID_FAILED(HttpStatus.UNAUTHORIZED, false, 401, "인증번호가 일치하지 않습니다."),

@@ -83,6 +83,17 @@ public class AuthServiceImpl implements AuthService {
 		smsRepository.removeSmsCode(dto.getPhone());
 	}
 
+	@Override
+	public boolean verifyNickname(String nickname, String role) {
+		if(role.equals("user")) {
+			return userRepository.findByNickname(nickname).isEmpty();
+		} else if(role.equals("partner")) {
+			return partnerRepository.findByNickname(nickname).isEmpty();
+		} else {
+			throw new BaseException(NO_EXIT_ROLE);
+		}
+	}
+
 	// 회원 공통 정보 저장 (유저, 파트너)
 	private Member createMember(SignUpReqDto dto, Role role) {
 		return memberRepository.save(Member.builder()

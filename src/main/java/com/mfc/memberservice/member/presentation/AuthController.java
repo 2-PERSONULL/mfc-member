@@ -1,6 +1,8 @@
 package com.mfc.memberservice.member.presentation;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,11 @@ public class AuthController {
 	public BaseResponse<Void> verifySms(@RequestBody SmsReqVo vo) {
 		authService.verifyCode(modelMapper.map(vo, SmsReqDto.class));
 		return new BaseResponse<>();
+	}
+
+	@GetMapping("/nickname/{nickname}")
+	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname, @RequestParam String role) {
+		return new BaseResponse<>(authService.verifyNickname(nickname, role));
 	}
 
 }
