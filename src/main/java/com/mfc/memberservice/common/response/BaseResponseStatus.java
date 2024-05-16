@@ -58,7 +58,8 @@ public enum BaseResponseStatus {
 	PASSWORD_SAME_FAILED(HttpStatus.BAD_REQUEST, false, 2108, "현재 사용중인 비밀번호 입니다."),
 	PASSWORD_CONTAIN_NUM_FAILED(HttpStatus.BAD_REQUEST, false, 2109, "휴대폰 번호를 포함한 비밀번호 입니다."),
 	PASSWORD_CONTAIN_EMAIL_FAILED(HttpStatus.BAD_REQUEST, false, 2110, "이메일이 포함된 비밀번호 입니다."),
-	DORMANCY_MEMBERS(HttpStatus.FORBIDDEN, false, 2111, "휴면 회원입니다.");
+	DORMANCY_MEMBERS(HttpStatus.FORBIDDEN, false, 2111, "휴면 회원입니다."),
+	NO_EXIT_ROLE(HttpStatus.BAD_REQUEST, false, 2112, "올바르지 않은 역할입니다.");
 
 	private final HttpStatusCode httpStatusCode;
 	private final boolean isSuccess;

@@ -45,6 +45,9 @@ dependencies {
 
 	// 휴대폰 인증
 	implementation 'net.nurigo:sdk:4.3.0'
+
+	// modelMapper
+	implementation 'org.modelmapper:modelmapper:3.0.0'
 }
 
 dependencyManagement {
