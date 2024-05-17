@@ -6,18 +6,23 @@ import static com.mfc.memberservice.member.domain.Role.*;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
+import com.mfc.memberservice.common.jwt.JwtTokenProvider;
 import com.mfc.memberservice.common.sms.SmsUtil;
 import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.Role;
 import com.mfc.memberservice.member.domain.User;
+import com.mfc.memberservice.member.dto.req.SignInReqDto;
 import com.mfc.memberservice.member.dto.req.SignUpReqDto;
 import com.mfc.memberservice.member.dto.req.SmsReqDto;
+import com.mfc.memberservice.member.dto.resp.SignInRespDto;
 import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.SmsRepository;
@@ -40,6 +45,8 @@ public class AuthServiceImpl implements AuthService {
 	private final SmsUtil smsUtil;
 
 	private final BCryptPasswordEncoder encoder;
+	private final JwtTokenProvider tokenProvider;
+	private final AuthenticationManager authenticationManager;
 
 	@Override
 	public void signUp(SignUpReqDto dto, String role) {
@@ -92,6 +99,22 @@ public class AuthServiceImpl implements AuthService {
 		} else {
 			throw new BaseException(NO_EXIT_ROLE);
 		}
+	}
+
+	@Override
+	public SignInRespDto signIn(SignInReqDto dto) {
+		Member member = memberRepository.findByEmail(dto.getEmail())
+				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+
+		authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(member.getUsername(), dto.getPassword())
+		);
+
+		return SignInRespDto.builder()
+				.role(member.getRole().toString())
+				.accessToken(tokenProvider.getAccessToken(member))
+				.refreshToken(tokenProvider.gerRefreshToken(member))
+				.build();
 	}
 
 	// 회원 공통 정보 저장 (유저, 파트너)

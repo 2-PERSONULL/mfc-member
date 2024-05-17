@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mfc.memberservice.common.response.BaseResponse;
 import com.mfc.memberservice.member.application.AuthService;
+import com.mfc.memberservice.member.dto.req.SignInReqDto;
 import com.mfc.memberservice.member.dto.req.SignUpReqDto;
 import com.mfc.memberservice.member.dto.req.SmsReqDto;
+import com.mfc.memberservice.member.vo.req.SignInReqVo;
 import com.mfc.memberservice.member.vo.req.SignUpReqVo;
 import com.mfc.memberservice.member.vo.req.SmsReqVo;
+import com.mfc.memberservice.member.vo.resp.SignInRespVo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +49,14 @@ public class AuthController {
 	@GetMapping("/nickname/{nickname}")
 	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname, @RequestParam String role) {
 		return new BaseResponse<>(authService.verifyNickname(nickname, role));
+	}
+
+	@PostMapping("/signin")
+	public BaseResponse<SignInRespVo> signIn(@RequestBody SignInReqVo vo) {
+		return new BaseResponse<>(
+				modelMapper.map(authService.signIn(modelMapper.map(vo, SignInReqDto.class)),
+						SignInRespVo.class)
+		);
 	}
 
 }
