@@ -20,7 +20,7 @@ public class Partner extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private UUID uuid;
+	private String uuid;
 	@Column(nullable = false, length = 20)
 	private String nickname;
 	private String profileImage;
@@ -29,7 +29,7 @@ public class Partner extends BaseEntity {
 	private Integer average_date;
 
 	@Builder
-	public Partner(Long id, UUID uuid, String nickname, String profileImage, String account, String description,
+	public Partner(Long id, String uuid, String nickname, String profileImage, String account, String description,
 			Integer average_date) {
 		this.id = id;
 		this.uuid = uuid;
