@@ -1,7 +1,5 @@
 package com.mfc.memberservice.member.domain;
 
-import java.util.UUID;
-
 import com.mfc.memberservice.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -24,6 +22,8 @@ public class User extends BaseEntity {
 	@Column(nullable = false, length = 10)
 	private String nickname;
 	private String profileImage;
+	@Column(length = 50)
+	private String imageAlt;
 	private Integer height;
 	@Column(length = 20)
 	private String topSize;
@@ -33,12 +33,12 @@ public class User extends BaseEntity {
 
 	@Builder
 	public User(Long id, String uuid, String nickname, String profileImage, Integer height, String topSize,
-			String bottomSize,
-			Integer shoeSize) {
+			String bottomSize, Integer shoeSize, String imageAlt) {
 		this.id = id;
 		this.uuid = uuid;
 		this.nickname = nickname;
 		this.profileImage = profileImage;
+		this.imageAlt = imageAlt;
 		this.height = height;
 		this.topSize = topSize;
 		this.bottomSize = bottomSize;

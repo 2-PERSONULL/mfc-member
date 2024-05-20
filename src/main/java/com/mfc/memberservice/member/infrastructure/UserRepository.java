@@ -8,4 +8,5 @@ import com.mfc.memberservice.member.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByNickname(String nickname);
+	Optional<User> findByUuid(String uuid);
 }
