@@ -18,8 +18,9 @@ public class User extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(updatable = false)
 	private String uuid;
-	@Column(nullable = false, length = 10)
+	@Column(nullable = false, length = 20)
 	private String nickname;
 	private String profileImage;
 	@Column(length = 50)

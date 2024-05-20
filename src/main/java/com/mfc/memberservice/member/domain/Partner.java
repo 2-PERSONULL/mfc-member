@@ -20,6 +20,7 @@ public class Partner extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(updatable = false)
 	private String uuid;
 	@Column(nullable = false, length = 20)
 	private String nickname;
