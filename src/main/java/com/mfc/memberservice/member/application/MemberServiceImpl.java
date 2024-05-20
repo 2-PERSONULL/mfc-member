@@ -86,6 +86,7 @@ public class MemberServiceImpl implements MemberService {
 				.profileImage(user.getProfileImage())
 				.topSize(user.getTopSize())
 				.height(user.getHeight())
+				.weight(user.getWeight())
 				.imageAlt(user.getImageAlt())
 				.shoeSize(user.getShoeSize())
 				.bottomSize(user.getBottomSize())

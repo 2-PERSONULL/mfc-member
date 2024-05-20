@@ -26,6 +26,7 @@ public class User extends BaseEntity {
 	@Column(length = 50)
 	private String imageAlt;
 	private Integer height;
+	private Integer weight;
 	@Column(length = 20)
 	private String topSize;
 	@Column(length = 20)
@@ -33,14 +34,15 @@ public class User extends BaseEntity {
 	private Integer shoeSize;
 
 	@Builder
-	public User(Long id, String uuid, String nickname, String profileImage, Integer height, String topSize,
-			String bottomSize, Integer shoeSize, String imageAlt) {
+	public User(Long id, String uuid, String nickname, String profileImage, Integer height, Integer weight,
+			String topSize, String bottomSize, Integer shoeSize, String imageAlt) {
 		this.id = id;
 		this.uuid = uuid;
 		this.nickname = nickname;
 		this.profileImage = profileImage;
 		this.imageAlt = imageAlt;
 		this.height = height;
+		this.weight = weight;
 		this.topSize = topSize;
 		this.bottomSize = bottomSize;
 		this.shoeSize = shoeSize;

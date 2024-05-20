@@ -8,6 +8,7 @@ public class ModifyUserReqVo {
 	private String profileImage;
 	private String imageAlt;
 	private Integer height;
+	private Integer weight;
 	private String topSize;
 	private String bottomSize;
 	private Integer shoeSize;
