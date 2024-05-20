@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.common.response.BaseResponse;
 import com.mfc.memberservice.member.application.MemberService;
+import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
+import com.mfc.memberservice.member.vo.req.ModifyFavoriteStyleReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyMemberReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
@@ -73,6 +76,19 @@ public class MemberController {
 		}
 
 		memberService.modifyPassword(uuid, modelMapper.map(vo, ModifyMemberReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PostMapping("/favoritestyle")
+	public BaseResponse<Void> modifyStyle(
+			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
+			@RequestBody @Validated ModifyFavoriteStyleReqVo vo) {
+
+		if(!StringUtils.hasText(uuid)) {
+			throw new BaseException(NO_REQUIRED_HEADER);
+		}
+
+		memberService.modifyFavoriteStyle(uuid, modelMapper.map(vo, ModifyFavoriteStyleReqDto.class));
 		return new BaseResponse<>();
 	}
 }

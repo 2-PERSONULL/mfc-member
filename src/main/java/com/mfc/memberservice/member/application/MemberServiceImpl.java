@@ -11,11 +11,14 @@ import com.mfc.memberservice.common.response.BaseResponse;
 import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
+import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
+import com.mfc.memberservice.style.domain.FavoriteStyle;
+import com.mfc.memberservice.style.infrastructure.FavoriteStyleRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberRepository memberRepository;
 	private final UserRepository userRepository;
 	private final PartnerRepository partnerRepository;
+	private final FavoriteStyleRepository favoriteStyleRepository;
 
 	private final PasswordEncoder encoder;
 
@@ -76,7 +80,18 @@ public class MemberServiceImpl implements MemberService {
 				.role(member.getRole())
 				.build()
 		);
+	}
 
+	@Override
+	public void modifyFavoriteStyle(String uuid, ModifyFavoriteStyleReqDto dto) {
+		favoriteStyleRepository.deleteByUuid(uuid);
+
+		dto.getFavoriteStyles().stream()
+				.forEach(i -> favoriteStyleRepository.save(
+						FavoriteStyle.builder()
+								.uuid(uuid)
+								.styleId(i)
+								.build()));
 	}
 
 	private void updateUserNickname(User user, String nickname) {
