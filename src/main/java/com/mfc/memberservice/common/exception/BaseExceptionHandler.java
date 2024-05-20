@@ -28,7 +28,7 @@ public class BaseExceptionHandler {
 		return new ResponseEntity<>(response, response.httpStatus());
 	}
 
-	@ExceptionHandler(Exception.class)
+	// @ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleAllExceptions(Exception e) {
 		BaseResponse<?> response = new BaseResponse<>(e.getMessage());
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
