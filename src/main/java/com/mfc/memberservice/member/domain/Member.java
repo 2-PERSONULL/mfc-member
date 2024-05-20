@@ -29,17 +29,19 @@ public class Member extends BaseEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(updatable = false)
 	private String uuid;
-	@Column(nullable = false, length = 20)
+	@Column(nullable = false, length = 20, updatable = false)
 	private String email;
 	@Column(nullable = false)
 	private String password;
 	@Column(nullable = false, updatable = false, length = 10)
 	private String name;
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	private String phone;
+	@Column(updatable = false)
 	private LocalDate birth;
-	@Column(columnDefinition = "TINYINT")
+	@Column(columnDefinition = "TINYINT", updatable = false)
 	private Short gender;
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

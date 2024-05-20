@@ -9,4 +9,5 @@ import com.mfc.memberservice.member.domain.User;
 
 public interface PartnerRepository extends JpaRepository<Partner, Long> {
 	Optional<Partner> findByNickname(String nickname);
+	Optional<Partner> findByUuid(String Uuid);
 }

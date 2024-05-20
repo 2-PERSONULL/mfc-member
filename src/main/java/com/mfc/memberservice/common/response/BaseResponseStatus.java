@@ -27,8 +27,10 @@ public enum BaseResponseStatus {
 	MESSAGE_VALID_FAILED(HttpStatus.UNAUTHORIZED, false, 401, "인증번호가 일치하지 않습니다."),
 	FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, false, 401, "아이디 또는 패스워드를 다시 확인하세요."),
 	WITHDRAWAL_MEMBERS(HttpStatus.FORBIDDEN, false, 2105, "탈퇴한 회원입니다."),
-	NO_EXIT_ROLE(HttpStatus.BAD_REQUEST, false, 2112, "올바르지 않은 역할입니다."),
+	NO_EXIT_ROLE(HttpStatus.BAD_REQUEST, false, 400, "잘못된 접근입니다."),
+	NO_REQUIRED_HEADER(HttpStatus.BAD_REQUEST, false, 400, "헤더에 UUID 혹은 Role이 존재하지 않습니다."),
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 회원입니다.");
+
 
 	private final HttpStatusCode httpStatusCode;
 	private final boolean isSuccess;
