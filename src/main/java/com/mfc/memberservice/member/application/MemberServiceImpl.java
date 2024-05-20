@@ -90,6 +90,7 @@ public class MemberServiceImpl implements MemberService {
 				.imageAlt(user.getImageAlt())
 				.shoeSize(user.getShoeSize())
 				.bottomSize(user.getBottomSize())
+				.bodyType(user.getBodyType())
 				.build()
 		);
 	}

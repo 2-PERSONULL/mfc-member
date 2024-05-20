@@ -1,9 +1,9 @@
-package com.mfc.memberservice.member.vo.req;
+package com.mfc.memberservice.member.dto.req;
 
 import lombok.Getter;
 
 @Getter
-public class ModifyUserReqVo {
+public class ModifyUserReqDto {
 	private String nickname;
 	private String profileImage;
 	private String imageAlt;
