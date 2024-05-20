@@ -2,13 +2,16 @@ package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.common.response.BaseResponse;
+import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
+import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
@@ -23,6 +26,8 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberRepository memberRepository;
 	private final UserRepository userRepository;
 	private final PartnerRepository partnerRepository;
+
+	private final PasswordEncoder encoder;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -58,6 +63,20 @@ public class MemberServiceImpl implements MemberService {
 		} else {
 			throw new BaseException(NO_EXIT_ROLE);
 		}
+	}
+
+	@Override
+	public void modifyPassword(String uuid, ModifyMemberReqDto dto) {
+		Member member = memberRepository.findByUuid(uuid)
+				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+
+		memberRepository.save(Member.builder()
+				.id(member.getId())
+				.password(encoder.encode(dto.getPassword()))
+				.role(member.getRole())
+				.build()
+		);
+
 	}
 
 	private void updateUserNickname(User user, String nickname) {

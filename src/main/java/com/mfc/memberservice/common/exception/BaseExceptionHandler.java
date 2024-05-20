@@ -1,8 +1,11 @@
 package com.mfc.memberservice.common.exception;
 
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,6 +28,17 @@ public class BaseExceptionHandler {
 	@ExceptionHandler
 	public ResponseEntity<?> incorrectPassword(BadCredentialsException e) { // 비밀번호 불일치
 		BaseResponse<?> response = new BaseResponse<>(BaseResponseStatus.FAILED_TO_LOGIN);
+		return new ResponseEntity<>(response, response.httpStatus());
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<BaseResponse<String>> processValidationError(MethodArgumentNotValidException e) {
+		String errors = e.getBindingResult().getFieldErrors().stream()
+				.map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+				.collect(Collectors.joining(", "));
+
+		BaseResponse<String> response = new BaseResponse<>(HttpStatus.BAD_REQUEST, false, errors, 400, null);
+
 		return new ResponseEntity<>(response, response.httpStatus());
 	}
 
