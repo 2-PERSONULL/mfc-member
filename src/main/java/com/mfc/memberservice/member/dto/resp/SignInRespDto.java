@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SignInRespDto {
+	private String uuid;
 	private String accessToken;
 	private String refreshToken;
 	private String role;

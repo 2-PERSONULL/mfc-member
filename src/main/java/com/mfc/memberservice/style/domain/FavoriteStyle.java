@@ -1,12 +1,9 @@
 package com.mfc.memberservice.style.domain;
 
-import java.util.UUID;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FavoriteStyle {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private UUID uuid;
+	private String uuid;
 	private Long styleId;
 
 	@Builder
-	public FavoriteStyle(Long id, UUID uuid, Long styleId) {
+	public FavoriteStyle(Long id, String uuid, Long styleId) {
 		this.id = id;
 		this.uuid = uuid;
 		this.styleId = styleId;

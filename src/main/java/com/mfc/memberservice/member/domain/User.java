@@ -20,7 +20,7 @@ public class User extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private UUID uuid;
+	private String uuid;
 	@Column(nullable = false, length = 10)
 	private String nickname;
 	private String profileImage;
@@ -31,7 +31,8 @@ public class User extends BaseEntity {
 	private String bottomSize;
 	private Integer shoeSize;
 
-	public User(Long id, UUID uuid, String nickname, String profileImage, Integer height, String topSize,
+	@Builder
+	public User(Long id, String uuid, String nickname, String profileImage, Integer height, String topSize,
 			String bottomSize,
 			Integer shoeSize) {
 		this.id = id;
@@ -42,11 +43,5 @@ public class User extends BaseEntity {
 		this.topSize = topSize;
 		this.bottomSize = bottomSize;
 		this.shoeSize = shoeSize;
-	}
-
-	@Builder
-	public User(UUID uuid, String nickname) {
-		this.uuid = uuid;
-		this.nickname = nickname;
 	}
 }

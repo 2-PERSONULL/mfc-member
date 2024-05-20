@@ -58,6 +58,7 @@ public class AuthController {
 		SignInRespDto dto = authService.signIn(modelMapper.map(vo, SignInReqDto.class));
 		resp.addHeader("accessToken", dto.getAccessToken());
 		resp.addHeader("refreshToken", dto.getRefreshToken());
+		resp.addHeader("uuid", dto.getUuid());
 
 		return new BaseResponse<>(
 				modelMapper.map(dto, SignInRespVo.class)

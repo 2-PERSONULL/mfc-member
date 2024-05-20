@@ -90,6 +90,7 @@ public class AuthServiceImpl implements AuthService {
 		smsRepository.removeSmsCode(dto.getPhone());
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public boolean verifyNickname(String nickname, String role) {
 		if(role.equals("user")) {
@@ -114,6 +115,7 @@ public class AuthServiceImpl implements AuthService {
 				.role(member.getRole().toString())
 				.accessToken(tokenProvider.getAccessToken(member))
 				.refreshToken(tokenProvider.gerRefreshToken(member))
+				.uuid(member.getUuid())
 				.build();
 	}
 
@@ -126,13 +128,13 @@ public class AuthServiceImpl implements AuthService {
 				.birth(dto.getBirth())
 				.phone(dto.getPhone())
 				.gender(dto.getGender())
-				.uuid(UUID.randomUUID())
+				.uuid(UUID.randomUUID().toString())
 				.role(role)
 				.build());
 	}
 
 	// 회원가입 시, 유저 정보 저장
-	private void createUser(UUID uuid, String nickname) {
+	private void createUser(String uuid, String nickname) {
 		userRepository.save(User.builder()
 				.uuid(uuid)
 				.nickname(nickname)
@@ -140,7 +142,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	// 회원가입 시, 파트너 정보 저장
-	private void createPartner(UUID uuid, String nickname) {
+	private void createPartner(String uuid, String nickname) {
 		partnerRepository.save(Partner.builder()
 				.uuid(uuid)
 				.nickname(nickname)
@@ -148,7 +150,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	// 선호 스타일 저장
-	private void insertFavoriteStyle(UUID uuid, List<Long> styles) {
+	private void insertFavoriteStyle(String uuid, List<Long> styles) {
 		styles.stream()
 				.forEach(i -> favoriteStyleRepository.save(
 						FavoriteStyle.builder()

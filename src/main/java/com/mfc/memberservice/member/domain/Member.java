@@ -13,6 +13,7 @@ import com.mfc.memberservice.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +29,7 @@ public class Member extends BaseEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private UUID uuid;
+	private String uuid;
 	@Column(nullable = false, length = 20)
 	private String email;
 	@Column(nullable = false)
@@ -40,13 +41,14 @@ public class Member extends BaseEntity implements UserDetails {
 	private LocalDate birth;
 	@Column(columnDefinition = "TINYINT")
 	private Short gender;
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
 
 	@Builder
-	public Member(UUID uuid, String email, String password, String name, String phone, LocalDate birth, Short gender,
-			Role role) {
+	public Member(Long id, String uuid, String email, String password, String name, String phone, LocalDate birth,
+			Short gender, Role role) {
+		this.id = id;
 		this.uuid = uuid;
 		this.email = email;
 		this.password = password;
@@ -64,7 +66,7 @@ public class Member extends BaseEntity implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return uuid.toString();
+		return uuid;
 	}
 
 	@Override

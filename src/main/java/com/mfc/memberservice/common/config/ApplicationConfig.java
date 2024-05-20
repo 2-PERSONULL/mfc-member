@@ -26,7 +26,7 @@ public class ApplicationConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return uuid -> memberRepository.findByUuid(UUID.fromString(uuid))
+		return uuid -> memberRepository.findByUuid(uuid)
 				.orElseThrow(() -> new BaseException(BaseResponseStatus.MEMBER_NOT_FOUND));
 	}
 
