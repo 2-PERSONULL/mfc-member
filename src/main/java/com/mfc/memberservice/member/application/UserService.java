@@ -5,4 +5,7 @@ import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 
 public interface UserService {
 	void updateProfile(String uuid, ModifyUserReqDto dto);
+	void updateSize(String uuid, ModifyUserReqDto dto);
+	void updateProfileImage(String uuid, ModifyUserReqDto dto);
+	void updateBodyType(String uuid, ModifyUserReqDto dto);
 }

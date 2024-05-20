@@ -30,11 +30,41 @@ public class UserController {
 	public BaseResponse<Void> updateProfile(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
 			@RequestBody ModifyUserReqVo vo) {
+		checkUuid(uuid);
+		userService.updateProfile(uuid, modelMapper.map(vo, ModifyUserReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/size")
+	public BaseResponse<Void> updateSize(
+			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyUserReqVo vo) {
+		checkUuid(uuid);
+		userService.updateSize(uuid, modelMapper.map(vo, ModifyUserReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/profileimage")
+	public BaseResponse<Void> updateProfileImage(
+			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyUserReqVo vo) {
+		checkUuid(uuid);
+		userService.updateProfileImage(uuid, modelMapper.map(vo, ModifyUserReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/bodytype")
+	public BaseResponse<Void> updateBodyType(
+			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyUserReqVo vo) {
+		checkUuid(uuid);
+		userService.updateBodyType(uuid, modelMapper.map(vo, ModifyUserReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	private void checkUuid(String uuid) {
 		if(!StringUtils.hasText(uuid)) {
 			throw new BaseException(NO_REQUIRED_HEADER);
 		}
-
-		userService.updateProfile(uuid, modelMapper.map(vo, ModifyUserReqDto.class));
-		return new BaseResponse<>();
 	}
 }
