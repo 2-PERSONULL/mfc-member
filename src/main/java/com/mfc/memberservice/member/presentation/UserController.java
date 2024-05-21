@@ -17,16 +17,20 @@ import com.mfc.memberservice.member.application.UserService;
 import com.mfc.memberservice.member.dto.req.ModifyUserReqDto;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Tag(name = "users", description = "유저 서비스 컨트롤러")
 public class UserController {
 	private final UserService userService;
 	private final ModelMapper modelMapper;
 
 	@PutMapping("/profile")
+	@Operation(summary = "유저 프로필 등록 API", description = "회원가입 후 프로필 한 번에 등록 (최초 1회)")
 	public BaseResponse<Void> updateProfile(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
 			@RequestBody ModifyUserReqVo vo) {
@@ -36,6 +40,7 @@ public class UserController {
 	}
 
 	@PutMapping("/size")
+	@Operation(summary = "유저 옷 사이즈 수정 API", description = "topSize, bottomSize, shoeSize만 수정 가능")
 	public BaseResponse<Void> updateSize(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
 			@RequestBody ModifyUserReqVo vo) {
@@ -45,6 +50,7 @@ public class UserController {
 	}
 
 	@PutMapping("/profileimage")
+	@Operation(summary = "유저 프로필 사진 수정 API", description = "profileImage만 수정 가능")
 	public BaseResponse<Void> updateProfileImage(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
 			@RequestBody ModifyUserReqVo vo) {
@@ -54,6 +60,7 @@ public class UserController {
 	}
 
 	@PutMapping("/bodytype")
+	@Operation(summary = "유저 체형 수정 API", description = "height, weight, bodyType만 수정 가능")
 	public BaseResponse<Void> updateBodyType(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
 			@RequestBody ModifyUserReqVo vo) {
