@@ -20,40 +20,51 @@ import com.mfc.memberservice.member.vo.req.SignUpReqVo;
 import com.mfc.memberservice.member.vo.req.SmsReqVo;
 import com.mfc.memberservice.member.vo.resp.SignInRespVo;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Tag(name = "auth", description = "인증 서비스 컨트롤러")
 public class AuthController {
 	private final AuthService authService;
 	private final ModelMapper modelMapper;
 
 	@PostMapping("/signup")
-	public BaseResponse<Void> signUp(@RequestBody SignUpReqVo vo, @RequestParam String role) {
+	@Operation(summary = "회원가입 API", description = "회원가입")
+	public BaseResponse<Void> signUp(@RequestBody SignUpReqVo vo,
+			@RequestParam @Parameter(required = true, example = "user/partner") String role) {
 		authService.signUp(modelMapper.map(vo, SignUpReqDto.class), role);
 		return new BaseResponse<>();
 	}
 
 	@PostMapping("/sms/send")
+	@Operation(summary = "휴대폰 인증 문자 전송 API", description = "인증번호 전송 (번호에 - 제거)")
 	public BaseResponse<Void> sendSms(@RequestBody SmsReqVo vo) {
 		authService.sendSms(modelMapper.map(vo, SmsReqDto.class));
 		return new BaseResponse<>();
 	}
 
 	@PostMapping("/sms/verify")
+	@Operation(summary = "휴대폰 인증 문자 검증 API", description = "인증번호 검증 (6자리, 유효시간 5분)")
 	public BaseResponse<Void> verifySms(@RequestBody SmsReqVo vo) {
 		authService.verifyCode(modelMapper.map(vo, SmsReqDto.class));
 		return new BaseResponse<>();
 	}
 
 	@GetMapping("/nickname/{nickname}")
-	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname, @RequestParam String role) {
+	@Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 확인")
+	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname,
+			@RequestParam @Parameter(required = true, example = "user/partner") String role) {
 		return new BaseResponse<>(authService.verifyNickname(nickname, role));
 	}
 
 	@PostMapping("/signin")
+	@Operation(summary = "로그인 API", description = "로그인 성공 시 토큰, uuid, role 반환")
 	public BaseResponse<SignInRespVo> signIn(@RequestBody SignInReqVo vo, HttpServletResponse resp) {
 		SignInRespDto dto = authService.signIn(modelMapper.map(vo, SignInReqDto.class));
 		resp.addHeader("accessToken", dto.getAccessToken());

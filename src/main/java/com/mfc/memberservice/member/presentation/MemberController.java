@@ -26,6 +26,9 @@ import com.mfc.memberservice.member.vo.req.ModifyMemberReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,40 +36,40 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@Tag(name = "members", description = "회원(유저 + 파트너) 공통 서비스 컨트롤러")
 public class MemberController {
 	private final MemberService memberService;
 	private final ModelMapper modelMapper;
 
 	@GetMapping
-	public BaseResponse<ProfileRespVo> getProfile(@RequestHeader HttpHeaders header) {
-		List<String> uuid = header.get("UUID");
-		List<String> role = header.get("Role");
-
-		if(uuid == null || role == null) {
+	@Operation(summary = "회원 기본 프로필 조회 API", description = "헤더의 ROLE 값으로 구분하여 역할에 따른 프로필 조회")
+	public BaseResponse<ProfileRespVo> getProfile(
+			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
+			@RequestHeader(name = "Role", defaultValue = "") String role) {
+		if(!StringUtils.hasText(uuid) || !StringUtils.hasText(role)) {
 			throw new BaseException(NO_REQUIRED_HEADER);
 		}
 
 		return new BaseResponse<>(modelMapper.map(
-				memberService.getProfile(uuid.get(0), role.get(0)), ProfileRespVo.class));
+				memberService.getProfile(uuid, role), ProfileRespVo.class));
 	}
 
 	@PutMapping("/nickname")
-	public BaseResponse<Void> modifyNickname(@RequestHeader HttpHeaders header,
+	@Operation(summary = "닉네임 수정 API", description = "헤더의 ROLE 값으로 구분하여 역할에 따라 닉네임 수정")
+	public BaseResponse<Void> modifyNickname(
+			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
+			@RequestHeader(name = "Role", defaultValue = "") String role,
 			@RequestBody ModifyUserReqVo vo) {
-		List<String> uuid = header.get("UUID");
-		List<String> role = header.get("Role");
-
-		log.info("nickname={}", vo.getNickname());
-
-		if(uuid == null || role == null) {
+		if(!StringUtils.hasText(uuid) || !StringUtils.hasText(role)) {
 			throw new BaseException(NO_REQUIRED_HEADER);
 		}
 
-		memberService.modifyNickname(uuid.get(0), role.get(0), vo.getNickname());
+		memberService.modifyNickname(uuid, role, vo.getNickname());
 		return new BaseResponse<>();
 	}
 
 	@PutMapping("/password")
+	@Operation(summary = "비밀번호 수정 API", description = "유저/파트너 공통 적용")
 	public BaseResponse<Void> modifyPassword(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
 			@RequestBody @Validated ModifyMemberReqVo vo) {
@@ -80,6 +83,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/favoritestyle")
+	@Operation(summary = "선호 스타일 수정 API", description = "유저/파트너 공통 적용")
 	public BaseResponse<Void> modifyStyle(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
 			@RequestBody @Validated ModifyFavoriteStyleReqVo vo) {
