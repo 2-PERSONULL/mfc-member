@@ -78,6 +78,7 @@ public class MemberServiceImpl implements MemberService {
 				.id(member.getId())
 				.password(encoder.encode(dto.getPassword()))
 				.role(member.getRole())
+				.status(member.getStatus())
 				.build()
 		);
 	}

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.type.descriptor.jdbc.TinyIntJdbcType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,10 +47,12 @@ public class Member extends BaseEntity implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
+	@Column(columnDefinition = "TINYINT")
+	private Short status;
 
 	@Builder
 	public Member(Long id, String uuid, String email, String password, String name, String phone, LocalDate birth,
-			Short gender, Role role) {
+			Short gender, Role role, Short status) {
 		this.id = id;
 		this.uuid = uuid;
 		this.email = email;
@@ -59,6 +62,7 @@ public class Member extends BaseEntity implements UserDetails {
 		this.birth = birth;
 		this.gender = gender;
 		this.role = role;
+		this.status = status;
 	}
 
 	@Override

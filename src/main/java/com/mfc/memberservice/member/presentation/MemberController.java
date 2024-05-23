@@ -2,10 +2,7 @@ package com.mfc.memberservice.member.presentation;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
-import java.util.List;
-
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +19,11 @@ import com.mfc.memberservice.member.application.MemberService;
 import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
 import com.mfc.memberservice.member.vo.req.ModifyFavoriteStyleReqVo;
-import com.mfc.memberservice.member.vo.req.ModifyMemberReqVo;
+import com.mfc.memberservice.member.vo.req.ModifyPasswordReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,7 +68,7 @@ public class MemberController {
 	@Operation(summary = "비밀번호 수정 API", description = "유저/파트너 공통 적용")
 	public BaseResponse<Void> modifyPassword(
 			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
-			@RequestBody @Validated ModifyMemberReqVo vo) {
+			@RequestBody @Validated ModifyPasswordReqVo vo) {
 
 		if(!StringUtils.hasText(uuid)) {
 			throw new BaseException(NO_REQUIRED_HEADER);

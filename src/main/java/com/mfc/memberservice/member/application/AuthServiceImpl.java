@@ -130,6 +130,7 @@ public class AuthServiceImpl implements AuthService {
 				.gender(dto.getGender())
 				.uuid(UUID.randomUUID().toString())
 				.role(role)
+				.status((short)1)
 				.build());
 	}
 
