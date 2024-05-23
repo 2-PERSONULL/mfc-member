@@ -95,6 +95,23 @@ public class MemberServiceImpl implements MemberService {
 								.build()));
 	}
 
+	@Override
+	public void resign(String uuid) {
+		Member member = memberRepository.findByUuid(uuid)
+				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+
+		memberRepository.save(Member.builder()
+				.id(member.getId())
+				.password(member.getPassword())
+				.role(member.getRole())
+				.status((short)0)
+				.build());
+
+		userRepository.deleteByUuid(uuid);
+		partnerRepository.deleteByUuid(uuid);
+		favoriteStyleRepository.deleteByUuid(uuid);
+	}
+
 	private void updateUserNickname(User user, String nickname) {
 		userRepository.save(User.builder()
 				.id(user.getId())

@@ -9,4 +9,5 @@ public interface MemberService {
 	void modifyNickname(String uuid, String role, String nickname);
 	void modifyPassword(String uuid, ModifyMemberReqDto dto);
 	void modifyFavoriteStyle(String uuid, ModifyFavoriteStyleReqDto dto);
+	void resign(String uuid);
 }

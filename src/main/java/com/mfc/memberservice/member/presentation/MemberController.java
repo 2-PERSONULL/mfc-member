@@ -91,4 +91,15 @@ public class MemberController {
 		memberService.modifyFavoriteStyle(uuid, modelMapper.map(vo, ModifyFavoriteStyleReqDto.class));
 		return new BaseResponse<>();
 	}
+
+	@PostMapping("/resign")
+	@Operation(summary = "회원 탈퇴 API", description = "유저/파트너 한 번에 탈퇴 (삭제)")
+	public BaseResponse<Void> resign(@RequestHeader(value = "UUID", defaultValue = "") String uuid) {
+		if(!StringUtils.hasText(uuid)) {
+			throw new BaseException(NO_REQUIRED_HEADER);
+		}
+
+		memberService.resign(uuid);
+		return new BaseResponse<>();
+	}
 }
