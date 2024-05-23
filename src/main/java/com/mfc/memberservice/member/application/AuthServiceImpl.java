@@ -4,6 +4,7 @@ import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 import static com.mfc.memberservice.member.domain.Role.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -122,11 +123,12 @@ public class AuthServiceImpl implements AuthService {
 	// 회원 공통 정보 저장 (유저, 파트너)
 	private Member createMember(SignUpReqDto dto, Role role) {
 
-		Member member = memberRepository.findByPhone(dto.getPhone()).orElseGet(null);
+		Optional<Member> member = memberRepository.findByPhone(dto.getPhone());
 
-		if(member != null) {
+		if(member.isPresent()) {
 			return memberRepository.save(Member.builder()
-					.id(member.getId())
+					.id(member.get().getId())
+					.uuid(member.get().getUuid())
 					.email(dto.getEmail())
 					.password(encoder.encode(dto.getPassword()))
 					.name(dto.getName())

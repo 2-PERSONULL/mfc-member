@@ -131,6 +131,9 @@ public class MemberServiceImpl implements MemberService {
 		if(role.equals("USER")) {
 			changeRole = memberRepository.save(Member.builder()
 					.id(member.getId())
+					.email(member.getEmail())
+					.phone(member.getPhone())
+					.name(member.getName())
 					.role(PARTNER)
 					.password(member.getPassword())
 					.status(member.getStatus())
@@ -146,6 +149,9 @@ public class MemberServiceImpl implements MemberService {
 		} else if(role.equals("PARTNER")) {
 			changeRole = memberRepository.save(Member.builder()
 					.id(member.getId())
+					.email(member.getEmail())
+					.phone(member.getPhone())
+					.name(member.getName())
 					.role(USER)
 					.password(member.getPassword())
 					.status(member.getStatus())

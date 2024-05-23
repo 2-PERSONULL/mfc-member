@@ -1,6 +1,7 @@
 package com.mfc.memberservice.member.presentation;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,8 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	@Operation(summary = "회원가입 API", description = "회원가입")
-	public BaseResponse<Void> signUp(@RequestBody SignUpReqVo vo,
+	public BaseResponse<Void> signUp(
+			@RequestBody @Validated  SignUpReqVo vo,
 			@RequestParam @Parameter(required = true, example = "user/partner") String role) {
 		authService.signUp(modelMapper.map(vo, SignUpReqDto.class), role);
 		return new BaseResponse<>();
