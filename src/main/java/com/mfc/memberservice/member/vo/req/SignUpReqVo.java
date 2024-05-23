@@ -25,4 +25,6 @@ public class SignUpReqVo {
 	private LocalDate birth;
 	private Short gender;
 	private List<Long> favoriteStyles = new ArrayList();
+	@NotBlank
+	private String role;
 }

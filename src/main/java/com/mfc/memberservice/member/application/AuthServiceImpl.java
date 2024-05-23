@@ -50,15 +50,15 @@ public class AuthServiceImpl implements AuthService {
 	private final AuthenticationManager authenticationManager;
 
 	@Override
-	public void signUp(SignUpReqDto dto, String role) {
+	public void signUp(SignUpReqDto dto) {
 		Role eRole = null;
 
-		if(role.equals("user")) { // 유저
+		if(dto.getRole().equals("USER")) { // 유저
 			eRole = USER;
 			Member member = createMember(dto, eRole);
 			createUser(member.getUuid(), dto.getNickname());
 			insertFavoriteStyle(member.getUuid(), dto.getFavoriteStyles());
-		} else if(role.equals("partner")) { // 파트너
+		} else if(dto.getRole().equals("PARTNER")) { // 파트너
 			eRole = PARTNER;
 			Member member = createMember(dto, eRole);
 			createPartner(member.getUuid(), dto.getNickname());

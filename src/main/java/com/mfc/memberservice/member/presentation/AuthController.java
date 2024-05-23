@@ -38,9 +38,8 @@ public class AuthController {
 	@PostMapping("/signup")
 	@Operation(summary = "회원가입 API", description = "회원가입")
 	public BaseResponse<Void> signUp(
-			@RequestBody @Validated  SignUpReqVo vo,
-			@RequestParam @Parameter(required = true, example = "user/partner") String role) {
-		authService.signUp(modelMapper.map(vo, SignUpReqDto.class), role);
+			@RequestBody @Validated  SignUpReqVo vo) {
+		authService.signUp(modelMapper.map(vo, SignUpReqDto.class));
 		return new BaseResponse<>();
 	}
 
