@@ -4,6 +4,7 @@ import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 import static com.mfc.memberservice.member.domain.Role.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,15 +50,15 @@ public class AuthServiceImpl implements AuthService {
 	private final AuthenticationManager authenticationManager;
 
 	@Override
-	public void signUp(SignUpReqDto dto, String role) {
+	public void signUp(SignUpReqDto dto) {
 		Role eRole = null;
 
-		if(role.equals("user")) { // 유저
+		if(dto.getRole().equals("USER")) { // 유저
 			eRole = USER;
 			Member member = createMember(dto, eRole);
 			createUser(member.getUuid(), dto.getNickname());
 			insertFavoriteStyle(member.getUuid(), dto.getFavoriteStyles());
-		} else if(role.equals("partner")) { // 파트너
+		} else if(dto.getRole().equals("PARTNER")) { // 파트너
 			eRole = PARTNER;
 			Member member = createMember(dto, eRole);
 			createPartner(member.getUuid(), dto.getNickname());
@@ -70,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void sendSms(SmsReqDto dto) {
 		String to = dto.getPhone();
-		if(isNew(to)) {
+		if(isDuplicate(to)) {
 			throw new BaseException(DUPLICATED_MEMBERS);
 		}
 
@@ -113,14 +114,32 @@ public class AuthServiceImpl implements AuthService {
 
 		return SignInRespDto.builder()
 				.role(member.getRole().toString())
-				.accessToken(tokenProvider.getAccessToken(member))
-				.refreshToken(tokenProvider.gerRefreshToken(member))
+				.accessToken(tokenProvider.getAccessToken(member.getUuid(), member.getRole().toString()))
+				.refreshToken(tokenProvider.gerRefreshToken(member.getUuid(), member.getRole().toString()))
 				.uuid(member.getUuid())
 				.build();
 	}
 
 	// 회원 공통 정보 저장 (유저, 파트너)
 	private Member createMember(SignUpReqDto dto, Role role) {
+
+		Optional<Member> member = memberRepository.findByPhone(dto.getPhone());
+
+		if(member.isPresent()) {
+			return memberRepository.save(Member.builder()
+					.id(member.get().getId())
+					.uuid(member.get().getUuid())
+					.email(dto.getEmail())
+					.password(encoder.encode(dto.getPassword()))
+					.name(dto.getName())
+					.birth(dto.getBirth())
+					.phone(dto.getPhone())
+					.gender(dto.getGender())
+					.role(role)
+					.status((short)1)
+					.build());
+		}
+
 		return memberRepository.save(Member.builder()
 				.email(dto.getEmail())
 				.password(encoder.encode(dto.getPassword()))
@@ -130,6 +149,7 @@ public class AuthServiceImpl implements AuthService {
 				.gender(dto.getGender())
 				.uuid(UUID.randomUUID().toString())
 				.role(role)
+				.status((short)1)
 				.build());
 	}
 
@@ -159,9 +179,9 @@ public class AuthServiceImpl implements AuthService {
 								.build()));
 	}
 
-	// 중복 회원 검증
-	private boolean isNew(String phone) {
-		return memberRepository.findByPhone(phone).isPresent();
+	// 중복 회원 검증 : 탈퇴 회원 포함 x
+	private boolean isDuplicate(String phone) {
+		return memberRepository.findByActivePhone(phone).isPresent();
 	}
 
 	// 인증번호 검증

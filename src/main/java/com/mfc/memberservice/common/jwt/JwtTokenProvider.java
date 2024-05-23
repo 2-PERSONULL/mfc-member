@@ -34,21 +34,21 @@ public class JwtTokenProvider {
 	}
 
 	// access token 발급
-	public String getAccessToken(Member member) {
-		return createToken(member, accessExp);
+	public String getAccessToken(String uuid, String role) {
+		return createToken(uuid, role, accessExp);
 	}
 
 	// refresh token 발급
-	public String gerRefreshToken(Member member) {
-		String refresh = createToken(member, refreshExp);
+	public String gerRefreshToken(String uuid, String role) {
+		String refresh = createToken(uuid, role, refreshExp);
 		return refresh;
 	}
 
 	// token 발급
-	public String createToken(Member member, long exp) {
+	public String createToken(String uuid, String role, long exp) {
 		return Jwts.builder()
-				.claim("role", member.getRole().toString())
-				.subject(member.getUuid().toString())
+				.claim("role", role)
+				.subject(uuid)
 				.issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + exp))
 				.signWith(key, SignatureAlgorithm.HS256)

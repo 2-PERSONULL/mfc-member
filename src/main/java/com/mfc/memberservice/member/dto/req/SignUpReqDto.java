@@ -15,4 +15,5 @@ public class SignUpReqDto {
 	private LocalDate birth;
 	private Short gender;
 	private List<Long> favoriteStyles = new ArrayList();
+	private String role;
 }
