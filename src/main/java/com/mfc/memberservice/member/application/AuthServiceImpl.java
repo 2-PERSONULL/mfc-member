@@ -113,8 +113,8 @@ public class AuthServiceImpl implements AuthService {
 
 		return SignInRespDto.builder()
 				.role(member.getRole().toString())
-				.accessToken(tokenProvider.getAccessToken(member))
-				.refreshToken(tokenProvider.gerRefreshToken(member))
+				.accessToken(tokenProvider.getAccessToken(member.getUuid(), member.getRole().toString()))
+				.refreshToken(tokenProvider.gerRefreshToken(member.getUuid(), member.getRole().toString()))
 				.uuid(member.getUuid())
 				.build();
 	}

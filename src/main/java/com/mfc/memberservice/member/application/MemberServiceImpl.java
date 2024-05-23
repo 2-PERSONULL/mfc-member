@@ -1,19 +1,22 @@
 package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
+import static com.mfc.memberservice.member.domain.Role.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
-import com.mfc.memberservice.common.response.BaseResponse;
+import com.mfc.memberservice.common.jwt.JwtTokenProvider;
 import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
+import com.mfc.memberservice.member.domain.Role;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
+import com.mfc.memberservice.member.dto.resp.SignInRespDto;
 import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
@@ -32,6 +35,7 @@ public class MemberServiceImpl implements MemberService {
 	private final FavoriteStyleRepository favoriteStyleRepository;
 
 	private final PasswordEncoder encoder;
+	private final JwtTokenProvider tokenProvider;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -110,6 +114,55 @@ public class MemberServiceImpl implements MemberService {
 		userRepository.deleteByUuid(uuid);
 		partnerRepository.deleteByUuid(uuid);
 		favoriteStyleRepository.deleteByUuid(uuid);
+	}
+
+	@Override
+	public SignInRespDto changeRole(String uuid, String role) {
+		Member member = memberRepository.findByUuid(uuid)
+				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+
+		Member changeRole = null;
+
+		if(role.equals("USER")) {
+			changeRole = memberRepository.save(Member.builder()
+					.id(member.getId())
+					.role(PARTNER)
+					.password(member.getPassword())
+					.status(member.getStatus())
+					.build());
+
+			if(partnerRepository.findByUuid(uuid).isEmpty()) {
+				partnerRepository.save(Partner.builder()
+						.uuid(uuid)
+						.nickname("partner" + (int) (Math.random() * 9000) + 1000)
+						.build()
+				);
+			}
+		} else if(role.equals("PARTNER")) {
+			changeRole = memberRepository.save(Member.builder()
+					.id(member.getId())
+					.role(USER)
+					.password(member.getPassword())
+					.status(member.getStatus())
+					.build());
+
+			if(userRepository.findByUuid(uuid).isEmpty()) {
+				userRepository.save(User.builder()
+						.uuid(uuid)
+						.nickname("user" + (int) (Math.random() * 9000) + 1000)
+						.build()
+				);
+			}
+		} else {
+			throw new BaseException(NO_EXIT_ROLE);
+		}
+
+		return SignInRespDto.builder()
+				.uuid(member.getUuid())
+				.role(changeRole.getRole().toString())
+				.accessToken(tokenProvider.getAccessToken(uuid, changeRole.getRole().toString()))
+				.refreshToken(tokenProvider.gerRefreshToken(uuid, changeRole.getRole().toString()))
+				.build();
 	}
 
 	private void updateUserNickname(User user, String nickname) {

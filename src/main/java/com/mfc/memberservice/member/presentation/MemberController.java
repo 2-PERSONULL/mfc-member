@@ -22,6 +22,7 @@ import com.mfc.memberservice.member.vo.req.ModifyFavoriteStyleReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyPasswordReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
+import com.mfc.memberservice.member.vo.resp.SignInRespVo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -101,5 +102,15 @@ public class MemberController {
 
 		memberService.resign(uuid);
 		return new BaseResponse<>();
+	}
+
+	@PutMapping("/change")
+	@Operation(summary = "회원 ↔ 파트너 역할 전환 API", description = "유저 ↔ 파트너 전환 시 토큰 재발급")
+	public BaseResponse<SignInRespVo> changeRole(
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestHeader(value = "Role", defaultValue = "") String role) {
+		return new BaseResponse<>(modelMapper.map(
+				memberService.changeRole(uuid, role), SignInRespVo.class)
+		);
 	}
 }
