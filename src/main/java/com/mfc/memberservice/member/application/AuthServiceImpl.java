@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void sendSms(SmsReqDto dto) {
 		String to = dto.getPhone();
-		if(isNew(to)) {
+		if(isDuplicate(to)) {
 			throw new BaseException(DUPLICATED_MEMBERS);
 		}
 
@@ -121,6 +121,23 @@ public class AuthServiceImpl implements AuthService {
 
 	// 회원 공통 정보 저장 (유저, 파트너)
 	private Member createMember(SignUpReqDto dto, Role role) {
+
+		Member member = memberRepository.findByPhone(dto.getPhone()).orElseGet(null);
+
+		if(member != null) {
+			return memberRepository.save(Member.builder()
+					.id(member.getId())
+					.email(dto.getEmail())
+					.password(encoder.encode(dto.getPassword()))
+					.name(dto.getName())
+					.birth(dto.getBirth())
+					.phone(dto.getPhone())
+					.gender(dto.getGender())
+					.role(role)
+					.status((short)1)
+					.build());
+		}
+
 		return memberRepository.save(Member.builder()
 				.email(dto.getEmail())
 				.password(encoder.encode(dto.getPassword()))
@@ -160,9 +177,9 @@ public class AuthServiceImpl implements AuthService {
 								.build()));
 	}
 
-	// 중복 회원 검증
-	private boolean isNew(String phone) {
-		return memberRepository.findByPhone(phone).isPresent();
+	// 중복 회원 검증 : 탈퇴 회원 포함 x
+	private boolean isDuplicate(String phone) {
+		return memberRepository.findByActivePhone(phone).isPresent();
 	}
 
 	// 인증번호 검증

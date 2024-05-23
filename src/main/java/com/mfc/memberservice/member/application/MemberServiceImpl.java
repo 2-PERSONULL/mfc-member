@@ -11,7 +11,6 @@ import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.common.jwt.JwtTokenProvider;
 import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
-import com.mfc.memberservice.member.domain.Role;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
@@ -80,6 +79,9 @@ public class MemberServiceImpl implements MemberService {
 
 		memberRepository.save(Member.builder()
 				.id(member.getId())
+				.email(member.getEmail())
+				.name(member.getName())
+				.phone(member.getPhone())
 				.password(encoder.encode(dto.getPassword()))
 				.role(member.getRole())
 				.status(member.getStatus())
@@ -106,6 +108,9 @@ public class MemberServiceImpl implements MemberService {
 
 		memberRepository.save(Member.builder()
 				.id(member.getId())
+				.email(member.getEmail())
+				.name(member.getName())
+				.phone(member.getPhone())
 				.password(member.getPassword())
 				.role(member.getRole())
 				.status((short)0)

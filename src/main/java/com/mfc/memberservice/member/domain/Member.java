@@ -32,13 +32,13 @@ public class Member extends BaseEntity implements UserDetails {
 	private Long id;
 	@Column(updatable = false)
 	private String uuid;
-	@Column(nullable = false, length = 20, updatable = false)
+	@Column(nullable = false, length = 20)
 	private String email;
 	@Column(nullable = false)
 	private String password;
-	@Column(nullable = false, updatable = false, length = 10)
+	@Column(nullable = false, length = 10)
 	private String name;
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false)
 	private String phone;
 	@Column(updatable = false)
 	private LocalDate birth;
