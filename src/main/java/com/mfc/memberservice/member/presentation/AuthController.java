@@ -59,9 +59,8 @@ public class AuthController {
 
 	@GetMapping("/nickname/{nickname}")
 	@Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 확인")
-	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname,
-			@RequestParam @Parameter(required = true, example = "user/partner") String role) {
-		return new BaseResponse<>(authService.verifyNickname(nickname, role));
+	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname) {
+		return new BaseResponse<>(authService.verifyNickname(nickname));
 	}
 
 	@PostMapping("/signin")
