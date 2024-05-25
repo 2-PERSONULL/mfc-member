@@ -99,6 +99,14 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
+	public boolean verifyEmail(String email) {
+		return memberRepository.findByEmail(email).isEmpty();
+	}
+
+	@Transactional(readOnly = true)
+
+
+	@Override
 	public SignInRespDto signIn(SignInReqDto dto) {
 		Member member = memberRepository.findByEmail(dto.getEmail())
 				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));

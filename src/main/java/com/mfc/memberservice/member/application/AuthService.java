@@ -12,6 +12,7 @@ public interface AuthService {
 	void sendSms(SmsReqDto dto); // 문자 전송
 	void verifyCode(SmsReqDto dto); // 문자 검증
 	boolean verifyNickname(String nickname); // 닉네임 중복 검증
-	SignInRespDto signIn(SignInReqDto dto);
+	boolean verifyEmail(String email); // 이메일 중복 검증
+	SignInRespDto signIn(SignInReqDto dto); // 로그인
 
 }

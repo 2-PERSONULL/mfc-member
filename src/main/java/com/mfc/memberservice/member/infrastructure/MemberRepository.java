@@ -3,6 +3,7 @@ package com.mfc.memberservice.member.infrastructure;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.hibernate.mapping.Selectable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,10 @@ public interface MemberRepository extends JpaRepository<Member, Long>, CustomMem
 	Optional<Member> findByActivePhone(@Param("phone") String phone);
 
 	Optional<Member> findByPhone(String phone);
-	Optional<Member> findByUuid(String uuid);
-	Optional<Member> findByEmail(String email);
+
+	@Query("select m from Member m where m.status = 1 and m.uuid = :uuid")
+	Optional<Member> findByUuid(@Param("uuid") String uuid);
+
+	@Query("select m from Member m where m.status = 1 and m.email = :email")
+	Optional<Member> findByEmail(@Param("email") String email);
 }
