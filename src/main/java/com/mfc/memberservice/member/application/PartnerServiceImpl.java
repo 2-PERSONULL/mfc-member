@@ -7,9 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.Partner;
-import com.mfc.memberservice.member.domain.User;
+import com.mfc.memberservice.member.domain.Sns;
 import com.mfc.memberservice.member.dto.req.ModifyPartnerReqDto;
+import com.mfc.memberservice.member.dto.req.SnsDto;
+import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
+import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
+import com.mfc.memberservice.member.infrastructure.SnsRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class PartnerServiceImpl implements PartnerService {
 	private final PartnerRepository partnerRepository;
+	private final SnsRepository snsRepository;
 
 	@Override
 	public void updateProfileImage(String uuid, ModifyPartnerReqDto dto) {
@@ -32,6 +37,29 @@ public class PartnerServiceImpl implements PartnerService {
 				.account(partner.getAccount())
 				.average_date(partner.getAverage_date())
 				.build());
+	}
+
+	@Override
+	public void updateSns(String uuid, UpdateSnsReqDto dto) {
+		snsRepository.deleteByPartnerId(uuid);
+		dto.getSns()
+				.forEach(sns -> snsRepository.save(Sns.builder()
+						.type(sns.getType())
+						.partnerId(uuid)
+						.snsUrl(sns.getSnsUrl())
+						.build())
+				);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public SnsListRespDto getSnsList(String partnerId) {
+		return SnsListRespDto.builder()
+				.sns(snsRepository.findByPartnerId(partnerId)
+						.stream()
+						.map(SnsDto::new)
+						.toList())
+				.build();
 	}
 
 	private Partner isExist(String uuid) {
