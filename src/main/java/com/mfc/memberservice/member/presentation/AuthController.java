@@ -25,12 +25,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Tag(name = "auth", description = "인증 서비스 컨트롤러")
+@Slf4j
 public class AuthController {
 	private final AuthService authService;
 	private final ModelMapper modelMapper;
@@ -59,9 +62,15 @@ public class AuthController {
 
 	@GetMapping("/nickname/{nickname}")
 	@Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 확인")
-	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname,
-			@RequestParam @Parameter(required = true, example = "user/partner") String role) {
-		return new BaseResponse<>(authService.verifyNickname(nickname, role));
+	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname) {
+		return new BaseResponse<>(authService.verifyNickname(nickname));
+	}
+
+	@GetMapping("/email/{email}")
+	@Operation(summary = "이메일 중복 확인 API", description = "이메일 중복 확인")
+	public BaseResponse<Boolean> verifyEmail(@PathVariable String email) {
+		log.info("email={}", email);
+		return new BaseResponse<>(authService.verifyEmail(email));
 	}
 
 	@PostMapping("/signin")

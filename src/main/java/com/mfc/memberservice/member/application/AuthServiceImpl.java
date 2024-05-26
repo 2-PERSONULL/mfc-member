@@ -93,15 +93,18 @@ public class AuthServiceImpl implements AuthService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public boolean verifyNickname(String nickname, String role) {
-		if(role.equals("user")) {
-			return userRepository.findByNickname(nickname).isEmpty();
-		} else if(role.equals("partner")) {
-			return partnerRepository.findByNickname(nickname).isEmpty();
-		} else {
-			throw new BaseException(NO_EXIT_ROLE);
-		}
+	public boolean verifyNickname(String nickname) {
+		return (userRepository.findByNickname(nickname).isEmpty()
+				&& partnerRepository.findByNickname(nickname).isEmpty());
 	}
+
+	@Override
+	public boolean verifyEmail(String email) {
+		return memberRepository.findByEmail(email).isEmpty();
+	}
+
+	@Transactional(readOnly = true)
+
 
 	@Override
 	public SignInRespDto signIn(SignInReqDto dto) {
