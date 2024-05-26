@@ -4,6 +4,8 @@ import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.common.response.BaseResponse;
 import com.mfc.memberservice.member.application.PartnerService;
+import com.mfc.memberservice.member.dto.req.CareerReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyPartnerReqDto;
 import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
+import com.mfc.memberservice.member.vo.req.CareerReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyPartnerReqVo;
 import com.mfc.memberservice.member.vo.req.UpdateSnsReqVo;
+import com.mfc.memberservice.member.vo.resp.CareerListRespVo;
 import com.mfc.memberservice.member.vo.resp.SnsListRespVo;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,6 +64,41 @@ public class PartnerController {
 	public BaseResponse<SnsListRespVo> updateSns(@PathVariable String partnerId) {
 		return new BaseResponse<>(modelMapper.map(
 				partnerService.getSnsList(partnerId), SnsListRespVo.class));
+	}
+
+	@PostMapping("/career")
+	@Operation(summary = "파트너 경력 등록 API", description = "파트너 포트폴리오 : 경력 등록")
+	public BaseResponse<Void> createCareer(
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestBody @Validated CareerReqVo vo) {
+		checkUuid(uuid);
+		partnerService.createCareer(uuid, modelMapper.map(vo, CareerReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/career/{careerId}")
+	@Operation(summary = "파트너 경력 수정 API", description = "파트너 포트폴리오 : 경력 수정")
+	public BaseResponse<Void> modifyCareer(@PathVariable Long careerId,
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestBody @Validated CareerReqVo vo) {
+		checkUuid(uuid);
+		partnerService.updateCareer(uuid, careerId, modelMapper.map(vo, CareerReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@DeleteMapping("/career/{careerId}")
+	@Operation(summary = "파트너 경력 삭제 API", description = "파트너 포트폴리오 : 경력 삭제")
+	public BaseResponse<Void> deleteCareer(@PathVariable Long careerId,
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid) {
+		checkUuid(uuid);
+		partnerService.deleteCareer(uuid, careerId);
+		return new BaseResponse<>();
+	}
+
+	@GetMapping("/career/{partnerId}")
+	@Operation(summary = "파트너 경력 조회 API", description = "파트너 포트폴리오 : 경력 목록 조회")
+	public BaseResponse<CareerListRespVo> getCareerList(@PathVariable String partnerId) {
+		return new BaseResponse<>(modelMapper.map(partnerService.getCareerList(partnerId), CareerListRespVo.class));
 	}
 
 	private void checkUuid(String uuid) {
