@@ -30,7 +30,10 @@ public enum BaseResponseStatus {
 	NO_EXIT_ROLE(HttpStatus.BAD_REQUEST, false, 400, "잘못된 접근입니다."),
 	NO_REQUIRED_HEADER(HttpStatus.BAD_REQUEST, false, 400, "헤더에 UUID 혹은 Role이 존재하지 않습니다."),
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 회원입니다."),
-	CAREER_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 경력입니다.");
+
+	CAREER_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 경력입니다."),
+	OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 옵션입니다.");
+
 
 
 	private final HttpStatusCode httpStatusCode;

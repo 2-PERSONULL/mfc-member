@@ -7,16 +7,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.Career;
+import com.mfc.memberservice.member.domain.PriceOption;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.Sns;
 import com.mfc.memberservice.member.dto.req.CareerReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyPartnerReqDto;
+import com.mfc.memberservice.member.dto.req.OptionReqDto;
 import com.mfc.memberservice.member.dto.req.SnsDto;
 import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
 import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
+import com.mfc.memberservice.member.dto.resp.OptionDto;
+import com.mfc.memberservice.member.dto.resp.OptionListRespDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 import com.mfc.memberservice.member.infrastructure.CareerRepository;
+import com.mfc.memberservice.member.infrastructure.PriceOptionRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.SnsRepository;
 
@@ -29,6 +34,7 @@ public class PartnerServiceImpl implements PartnerService {
 	private final PartnerRepository partnerRepository;
 	private final SnsRepository snsRepository;
 	private final CareerRepository careerRepository;
+	private final PriceOptionRepository optionsRepository;
 
 	@Override
 	public void updateProfileImage(String uuid, ModifyPartnerReqDto dto) {
@@ -108,6 +114,47 @@ public class PartnerServiceImpl implements PartnerService {
 				.careers(careerRepository.findByPartnerId(partnerId)
 						.stream()
 						.map(CareerDto::new)
+						.toList())
+				.build();
+	}
+
+	@Override
+	public void createOption(String uuid, OptionReqDto dto) {
+		isExist(uuid);
+		optionsRepository.save(PriceOption.builder()
+				.partnerId(uuid)
+				.value(dto.getValue())
+				.price(dto.getPrice())
+				.description(dto.getDescription())
+				.build()
+		);
+	}
+
+	@Override
+	public void updateOption(String partnerId, Long optionId, OptionReqDto dto) {
+		PriceOption option = optionsRepository.findByIdAndPartnerId(optionId, partnerId)
+				.orElseThrow(() -> new BaseException(OPTION_NOT_FOUND));
+
+		optionsRepository.save(PriceOption.builder()
+				.id(optionId)
+				.value(dto.getValue())
+				.price(dto.getPrice())
+				.description(dto.getDescription())
+				.build()
+		);
+	}
+
+	@Override
+	public void deleteOption(String partnerId, Long optionId) {
+		optionsRepository.deleteOption(partnerId, optionId);
+	}
+
+	@Override
+	public OptionListRespDto getOptionList(String partnerId) {
+		return OptionListRespDto.builder()
+				.options(optionsRepository.findByPartnerId(partnerId)
+						.stream()
+						.map(OptionDto::new)
 						.toList())
 				.build();
 	}
