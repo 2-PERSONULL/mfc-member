@@ -139,6 +139,46 @@ public class PartnerController {
 		return new BaseResponse<>(modelMapper.map(partnerService.getOptionList(partnerId), OptionListRespVo.class));
 	}
 
+	@PutMapping("/description")
+	@Operation(summary = "파트너 한 줄 소개 수정 API", description = "파트너 소개 수정 : description만 수정 가능")
+	public BaseResponse<Void> updateDescription(
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyPartnerReqVo vo) {
+		checkUuid(uuid);
+		partnerService.updateDescription(uuid, modelMapper.map(vo, ModifyPartnerReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/account")
+	@Operation(summary = "파트너 계좌 수정 API", description = "파트너 소개 수정 : bank, account만 수정 가능")
+	public BaseResponse<Void> updateAccount(
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyPartnerReqVo vo) {
+		checkUuid(uuid);
+		partnerService.updateAccount(uuid, modelMapper.map(vo, ModifyPartnerReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/chattime")
+	@Operation(summary = "파트너 채팅 가능 시간 수정 API", description = "파트너 소개 수정 : startTime, endTime만 수정 가능")
+	public BaseResponse<Void> updateChatTime(
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyPartnerReqVo vo) {
+		checkUuid(uuid);
+		partnerService.updateChatTime(uuid, modelMapper.map(vo, ModifyPartnerReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/averageDate")
+	@Operation(summary = "파트너 코디 평균 소요 시간 수정 API", description = "파트너 소개 수정 : averageDate만 수정 가능")
+	public BaseResponse<Void> updateAverageDate(
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyPartnerReqVo vo) {
+		checkUuid(uuid);
+		partnerService.updateAverageTime(uuid, modelMapper.map(vo, ModifyPartnerReqDto.class));
+		return new BaseResponse<>();
+	}
+
 	private void checkUuid(String uuid) {
 		if(!StringUtils.hasText(uuid)) {
 			throw new BaseException(NO_REQUIRED_HEADER);

@@ -1,7 +1,5 @@
 package com.mfc.memberservice.member.domain;
 
-import java.util.UUID;
-
 import com.mfc.memberservice.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -27,13 +25,16 @@ public class Partner extends BaseEntity {
 	private String profileImage;
 	@Column(length = 50)
 	private String imageAlt;
+	private String bank;
 	private String account;
 	private String description;
-	private Integer average_date;
+	private Integer startTime;
+	private Integer endTime;
+	private Integer averageDate;
 
 	@Builder
 	public Partner(Long id, String uuid, String nickname, String profileImage, String account, String description,
-			Integer average_date, String imageAlt) {
+			Integer averageDate, String imageAlt, String bank, Integer startTime, Integer endTime) {
 		this.id = id;
 		this.uuid = uuid;
 		this.nickname = nickname;
@@ -41,6 +42,9 @@ public class Partner extends BaseEntity {
 		this.imageAlt = imageAlt;
 		this.account = account;
 		this.description = description;
-		this.average_date = average_date;
+		this.averageDate = averageDate;
+		this.bank = bank;
+		this.startTime = startTime;
+		this.endTime = endTime;
 	}
 }

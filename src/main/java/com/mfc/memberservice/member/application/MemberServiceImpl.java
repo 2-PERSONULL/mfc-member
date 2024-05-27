@@ -198,7 +198,7 @@ public class MemberServiceImpl implements MemberService {
 				.nickname(nickname)
 				.profileImage(partner.getProfileImage())
 				.imageAlt(partner.getImageAlt())
-				.average_date(partner.getAverage_date())
+				.averageDate(partner.getAverageDate())
 				.description(partner.getDescription())
 				.account(partner.getAccount())
 				.build()

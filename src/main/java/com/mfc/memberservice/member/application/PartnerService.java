@@ -20,4 +20,8 @@ public interface PartnerService {
 	void updateOption(String partnerId, Long optionId, OptionReqDto dto);
 	void deleteOption(String partnerId, Long optionId);
 	OptionListRespDto getOptionList(String partnerId);
+	void updateDescription(String uuid, ModifyPartnerReqDto dto);
+	void updateAccount(String uuid, ModifyPartnerReqDto dto);
+	void updateAverageTime(String uuid, ModifyPartnerReqDto dto);
+	void updateChatTime(String uuid, ModifyPartnerReqDto dto);
 }

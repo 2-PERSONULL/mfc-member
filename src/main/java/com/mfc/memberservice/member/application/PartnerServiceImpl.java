@@ -47,7 +47,10 @@ public class PartnerServiceImpl implements PartnerService {
 				.imageAlt("Profile Image")
 				.description(partner.getDescription())
 				.account(partner.getAccount())
-				.average_date(partner.getAverage_date())
+				.averageDate(partner.getAverageDate())
+				.bank(partner.getBank())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
 				.build());
 	}
 
@@ -147,6 +150,78 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public void deleteOption(String partnerId, Long optionId) {
 		optionsRepository.deleteOption(partnerId, optionId);
+	}
+
+	@Override
+	public void updateDescription(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(dto.getDescription()) // 수정
+				.account(partner.getAccount())
+				.averageDate(partner.getAverageDate())
+				.bank(partner.getBank())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.build());
+	}
+
+	@Override
+	public void updateAccount(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(partner.getDescription())
+				.account(dto.getAccount()) // 수정
+				.averageDate(partner.getAverageDate())
+				.bank(dto.getBank()) // 수정
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.build());
+	}
+
+	@Override
+	public void updateAverageTime(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(partner.getDescription())
+				.account(partner.getAccount())
+				.averageDate(dto.getAverageDate()) // 수정
+				.bank(partner.getBank())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.build());
+	}
+
+	@Override
+	public void updateChatTime(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(partner.getDescription())
+				.account(partner.getAccount())
+				.averageDate(partner.getAverageDate())
+				.bank(partner.getBank())
+				.startTime(dto.getStartTime()) // 수정
+				.endTime(dto.getEndTime()) // 수정
+				.build());
 	}
 
 	@Override
