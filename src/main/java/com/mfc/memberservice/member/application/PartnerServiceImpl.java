@@ -19,6 +19,7 @@ import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.OptionDto;
 import com.mfc.memberservice.member.dto.resp.OptionListRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 import com.mfc.memberservice.member.infrastructure.CareerRepository;
 import com.mfc.memberservice.member.infrastructure.PriceOptionRepository;
@@ -231,6 +232,19 @@ public class PartnerServiceImpl implements PartnerService {
 						.stream()
 						.map(OptionDto::new)
 						.toList())
+				.build();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PartnerPortfolioRespDto getPortfolio(String uuid) {
+		Partner partner = isExist(uuid);
+
+		return PartnerPortfolioRespDto.builder()
+				.description(partner.getDescription())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.averageDate(partner.getAverageDate())
 				.build();
 	}
 
