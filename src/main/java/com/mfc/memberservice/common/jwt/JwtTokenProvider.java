@@ -34,20 +34,19 @@ public class JwtTokenProvider {
 	}
 
 	// access token 발급
-	public String getAccessToken(String uuid, String role) {
-		return createToken(uuid, role, accessExp);
+	public String getAccessToken(String uuid) {
+		return createToken(uuid, accessExp);
 	}
 
 	// refresh token 발급
-	public String gerRefreshToken(String uuid, String role) {
-		String refresh = createToken(uuid, role, refreshExp);
+	public String gerRefreshToken(String uuid) {
+		String refresh = createToken(uuid, refreshExp);
 		return refresh;
 	}
 
 	// token 발급
-	public String createToken(String uuid, String role, long exp) {
+	public String createToken(String uuid, long exp) {
 		return Jwts.builder()
-				.claim("role", role)
 				.subject(uuid)
 				.issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + exp))

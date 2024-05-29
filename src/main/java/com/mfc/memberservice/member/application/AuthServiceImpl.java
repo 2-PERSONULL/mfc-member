@@ -51,16 +51,13 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public void signUp(SignUpReqDto dto) {
-		Role eRole = null;
 
 		if(dto.getRole().equals("USER")) { // 유저
-			eRole = USER;
-			Member member = createMember(dto, eRole);
+			Member member = createMember(dto);
 			createUser(member.getUuid(), dto.getNickname());
 			insertFavoriteStyle(member.getUuid(), dto.getFavoriteStyles());
 		} else if(dto.getRole().equals("PARTNER")) { // 파트너
-			eRole = PARTNER;
-			Member member = createMember(dto, eRole);
+			Member member = createMember(dto);
 			createPartner(member.getUuid(), dto.getNickname());
 			insertFavoriteStyle(member.getUuid(), dto.getFavoriteStyles());
 		} else { // 이외의 파라미터 : 예외 발생
@@ -104,8 +101,6 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Transactional(readOnly = true)
-
-
 	@Override
 	public SignInRespDto signIn(SignInReqDto dto) {
 		Member member = memberRepository.findByEmail(dto.getEmail())
@@ -116,15 +111,14 @@ public class AuthServiceImpl implements AuthService {
 		);
 
 		return SignInRespDto.builder()
-				.role(member.getRole().toString())
-				.accessToken(tokenProvider.getAccessToken(member.getUuid(), member.getRole().toString()))
-				.refreshToken(tokenProvider.gerRefreshToken(member.getUuid(), member.getRole().toString()))
+				.accessToken(tokenProvider.getAccessToken(member.getUuid()))
+				.refreshToken(tokenProvider.gerRefreshToken(member.getUuid()))
 				.uuid(member.getUuid())
 				.build();
 	}
 
 	// 회원 공통 정보 저장 (유저, 파트너)
-	private Member createMember(SignUpReqDto dto, Role role) {
+	private Member createMember(SignUpReqDto dto) {
 
 		Optional<Member> member = memberRepository.findByPhone(dto.getPhone());
 
@@ -138,7 +132,6 @@ public class AuthServiceImpl implements AuthService {
 					.birth(dto.getBirth())
 					.phone(dto.getPhone())
 					.gender(dto.getGender())
-					.role(role)
 					.status((short)1)
 					.build());
 		}
@@ -151,7 +144,6 @@ public class AuthServiceImpl implements AuthService {
 				.phone(dto.getPhone())
 				.gender(dto.getGender())
 				.uuid(UUID.randomUUID().toString())
-				.role(role)
 				.status((short)1)
 				.build());
 	}

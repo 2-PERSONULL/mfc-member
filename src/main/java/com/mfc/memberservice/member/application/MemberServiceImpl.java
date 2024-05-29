@@ -1,7 +1,6 @@
 package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
-import static com.mfc.memberservice.member.domain.Role.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -83,7 +82,6 @@ public class MemberServiceImpl implements MemberService {
 				.name(member.getName())
 				.phone(member.getPhone())
 				.password(encoder.encode(dto.getPassword()))
-				.role(member.getRole())
 				.status(member.getStatus())
 				.build()
 		);
@@ -112,7 +110,6 @@ public class MemberServiceImpl implements MemberService {
 				.name(member.getName())
 				.phone(member.getPhone())
 				.password(member.getPassword())
-				.role(member.getRole())
 				.status((short)0)
 				.build());
 
@@ -129,16 +126,6 @@ public class MemberServiceImpl implements MemberService {
 		Member changeRole = null;
 
 		if(role.equals("USER")) {
-			changeRole = memberRepository.save(Member.builder()
-					.id(member.getId())
-					.email(member.getEmail())
-					.phone(member.getPhone())
-					.name(member.getName())
-					.role(PARTNER)
-					.password(member.getPassword())
-					.status(member.getStatus())
-					.build());
-
 			if(partnerRepository.findByUuid(uuid).isEmpty()) {
 				partnerRepository.save(Partner.builder()
 						.uuid(uuid)
@@ -147,16 +134,6 @@ public class MemberServiceImpl implements MemberService {
 				);
 			}
 		} else if(role.equals("PARTNER")) {
-			changeRole = memberRepository.save(Member.builder()
-					.id(member.getId())
-					.email(member.getEmail())
-					.phone(member.getPhone())
-					.name(member.getName())
-					.role(USER)
-					.password(member.getPassword())
-					.status(member.getStatus())
-					.build());
-
 			if(userRepository.findByUuid(uuid).isEmpty()) {
 				userRepository.save(User.builder()
 						.uuid(uuid)
@@ -170,9 +147,8 @@ public class MemberServiceImpl implements MemberService {
 
 		return SignInRespDto.builder()
 				.uuid(member.getUuid())
-				.role(changeRole.getRole().toString())
-				.accessToken(tokenProvider.getAccessToken(uuid, changeRole.getRole().toString()))
-				.refreshToken(tokenProvider.gerRefreshToken(uuid, changeRole.getRole().toString()))
+				.accessToken(tokenProvider.getAccessToken(uuid))
+				.refreshToken(tokenProvider.gerRefreshToken(uuid))
 				.build();
 	}
 
