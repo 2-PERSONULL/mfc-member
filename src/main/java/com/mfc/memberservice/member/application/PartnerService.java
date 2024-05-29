@@ -6,6 +6,7 @@ import com.mfc.memberservice.member.dto.req.OptionReqDto;
 import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.OptionListRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 
 public interface PartnerService {
@@ -20,4 +21,9 @@ public interface PartnerService {
 	void updateOption(String partnerId, Long optionId, OptionReqDto dto);
 	void deleteOption(String partnerId, Long optionId);
 	OptionListRespDto getOptionList(String partnerId);
+	void updateDescription(String uuid, ModifyPartnerReqDto dto);
+	void updateAccount(String uuid, ModifyPartnerReqDto dto);
+	void updateAverageTime(String uuid, ModifyPartnerReqDto dto);
+	void updateChatTime(String uuid, ModifyPartnerReqDto dto);
+	PartnerPortfolioRespDto getPortfolio(String uuid);
 }

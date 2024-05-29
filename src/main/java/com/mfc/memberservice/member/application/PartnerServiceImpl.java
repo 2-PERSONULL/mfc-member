@@ -19,6 +19,7 @@ import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.OptionDto;
 import com.mfc.memberservice.member.dto.resp.OptionListRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 import com.mfc.memberservice.member.infrastructure.CareerRepository;
 import com.mfc.memberservice.member.infrastructure.PriceOptionRepository;
@@ -47,7 +48,10 @@ public class PartnerServiceImpl implements PartnerService {
 				.imageAlt("Profile Image")
 				.description(partner.getDescription())
 				.account(partner.getAccount())
-				.average_date(partner.getAverage_date())
+				.averageDate(partner.getAverageDate())
+				.bank(partner.getBank())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
 				.build());
 	}
 
@@ -150,12 +154,97 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
+	public void updateDescription(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(dto.getDescription()) // 수정
+				.account(partner.getAccount())
+				.averageDate(partner.getAverageDate())
+				.bank(partner.getBank())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.build());
+	}
+
+	@Override
+	public void updateAccount(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(partner.getDescription())
+				.account(dto.getAccount()) // 수정
+				.averageDate(partner.getAverageDate())
+				.bank(dto.getBank()) // 수정
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.build());
+	}
+
+	@Override
+	public void updateAverageTime(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(partner.getDescription())
+				.account(partner.getAccount())
+				.averageDate(dto.getAverageDate()) // 수정
+				.bank(partner.getBank())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.build());
+	}
+
+	@Override
+	public void updateChatTime(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(partner.getDescription())
+				.account(partner.getAccount())
+				.averageDate(partner.getAverageDate())
+				.bank(partner.getBank())
+				.startTime(dto.getStartTime()) // 수정
+				.endTime(dto.getEndTime()) // 수정
+				.build());
+	}
+
+	@Override
 	public OptionListRespDto getOptionList(String partnerId) {
 		return OptionListRespDto.builder()
 				.options(optionsRepository.findByPartnerId(partnerId)
 						.stream()
 						.map(OptionDto::new)
 						.toList())
+				.build();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PartnerPortfolioRespDto getPortfolio(String uuid) {
+		Partner partner = isExist(uuid);
+
+		return PartnerPortfolioRespDto.builder()
+				.description(partner.getDescription())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.averageDate(partner.getAverageDate())
 				.build();
 	}
 
