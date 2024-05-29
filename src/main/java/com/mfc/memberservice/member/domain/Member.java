@@ -44,15 +44,15 @@ public class Member extends BaseEntity implements UserDetails {
 	private LocalDate birth;
 	@Column(columnDefinition = "TINYINT", updatable = false)
 	private Short gender;
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Role role;
+	// @Enumerated(EnumType.STRING)
+	// @Column(nullable = false)
+	// private Role role;
 	@Column(columnDefinition = "TINYINT")
 	private Short status;
 
 	@Builder
 	public Member(Long id, String uuid, String email, String password, String name, String phone, LocalDate birth,
-			Short gender, Role role, Short status) {
+			Short gender, Short status) {
 		this.id = id;
 		this.uuid = uuid;
 		this.email = email;
@@ -61,7 +61,7 @@ public class Member extends BaseEntity implements UserDetails {
 		this.phone = phone;
 		this.birth = birth;
 		this.gender = gender;
-		this.role = role;
+		// this.role = role;
 		this.status = status;
 	}
 
