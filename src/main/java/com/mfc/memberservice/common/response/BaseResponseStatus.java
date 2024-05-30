@@ -32,8 +32,10 @@ public enum BaseResponseStatus {
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 회원입니다."),
 
 	CAREER_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 경력입니다."),
-	OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 옵션입니다.");
-
+	OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "존재하지 않는 옵션입니다."),
+	INVALID_SNS_TYPE(HttpStatus.BAD_REQUEST, false, 400, "SNS 타입이 유효하지 않습니다."),
+	INVALID_SIZE_TYPE(HttpStatus.BAD_REQUEST, false, 400, "사이즈가 유효하지 않습니다."),
+	INVALID_BODY_TYPE(HttpStatus.BAD_REQUEST, false, 400, "체형 타입이 유효하지 않습니다.");
 
 
 	private final HttpStatusCode httpStatusCode;

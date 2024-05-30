@@ -10,7 +10,7 @@ public class SnsDto {
 	private String snsUrl;
 
 	public SnsDto(Sns sns) {
-		this.type = sns.getType();
+		this.type = sns.getType().toString();
 		this.snsUrl = sns.getSnsUrl();
 	}
 }

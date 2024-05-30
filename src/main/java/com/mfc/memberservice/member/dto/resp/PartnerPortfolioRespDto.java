@@ -10,4 +10,5 @@ public class PartnerPortfolioRespDto {
 	private Integer startTime;
 	private Integer endTime;
 	private Integer averageDate;
+	private Integer averagePrice;
 }

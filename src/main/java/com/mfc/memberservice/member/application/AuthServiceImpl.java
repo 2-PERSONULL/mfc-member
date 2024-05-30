@@ -1,7 +1,6 @@
 package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
-import static com.mfc.memberservice.member.domain.Role.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +17,6 @@ import com.mfc.memberservice.common.jwt.JwtTokenProvider;
 import com.mfc.memberservice.common.sms.SmsUtil;
 import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
-import com.mfc.memberservice.member.domain.Role;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.req.SignInReqDto;
 import com.mfc.memberservice.member.dto.req.SignUpReqDto;

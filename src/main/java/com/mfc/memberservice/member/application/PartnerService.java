@@ -25,5 +25,6 @@ public interface PartnerService {
 	void updateAccount(String uuid, ModifyPartnerReqDto dto);
 	void updateAverageTime(String uuid, ModifyPartnerReqDto dto);
 	void updateChatTime(String uuid, ModifyPartnerReqDto dto);
+	void updateAveragePrice(String uuid, ModifyPartnerReqDto dto);
 	PartnerPortfolioRespDto getPortfolio(String uuid);
 }

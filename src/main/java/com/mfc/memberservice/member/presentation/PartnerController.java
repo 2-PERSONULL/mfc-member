@@ -105,8 +105,8 @@ public class PartnerController {
 		return new BaseResponse<>(modelMapper.map(partnerService.getCareerList(partnerId), CareerListRespVo.class));
 	}
 
-	@PostMapping("/option")
-	@Operation(summary = "파트너 옵션 등록 API", description = "파트너 포트폴리오 : 옵션 등록")
+	// @PostMapping("/option")
+	// @Operation(summary = "파트너 옵션 등록 API", description = "파트너 포트폴리오 : 옵션 등록")
 	public BaseResponse<Void> createOption(
 			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
 			@RequestBody @Validated OptionReqVo vo) {
@@ -115,8 +115,8 @@ public class PartnerController {
 		return new BaseResponse<>();
 	}
 
-	@PutMapping("/option/{optionId}")
-	@Operation(summary = "파트너 옵션 수정 API", description = "파트너 포트폴리오 : 옵션 수정")
+	// @PutMapping("/option/{optionId}")
+	// @Operation(summary = "파트너 옵션 수정 API", description = "파트너 포트폴리오 : 옵션 수정")
 	public BaseResponse<Void> modifyOption(@PathVariable Long optionId,
 			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
 			@RequestBody @Validated OptionReqVo vo) {
@@ -125,8 +125,8 @@ public class PartnerController {
 		return new BaseResponse<>();
 	}
 
-	@DeleteMapping("/option/{optionId}")
-	@Operation(summary = "파트너 옵션 삭제 API", description = "파트너 포트폴리오 : 옵션 삭제")
+	// @DeleteMapping("/option/{optionId}")
+	// @Operation(summary = "파트너 옵션 삭제 API", description = "파트너 포트폴리오 : 옵션 삭제")
 	public BaseResponse<Void> deleteOption(@PathVariable Long optionId,
 			@RequestHeader(value = "UUID", defaultValue = "") String uuid) {
 		checkUuid(uuid);
@@ -134,8 +134,8 @@ public class PartnerController {
 		return new BaseResponse<>();
 	}
 
-	@GetMapping("/option/{partnerId}")
-	@Operation(summary = "파트너 가격 옵션 조회 API", description = "파트너 포트폴리오 : 가격 옵션 조회")
+	// @GetMapping("/option/{partnerId}")
+	// @Operation(summary = "파트너 가격 옵션 조회 API", description = "파트너 포트폴리오 : 가격 옵션 조회")
 	public BaseResponse<OptionListRespVo> getOptionList(@PathVariable String partnerId) {
 		return new BaseResponse<>(modelMapper.map(partnerService.getOptionList(partnerId), OptionListRespVo.class));
 	}
@@ -151,7 +151,7 @@ public class PartnerController {
 	}
 
 	@PutMapping("/account")
-	@Operation(summary = "파트너 계좌 수정 API", description = "파트너 소개 수정 : bank, account만 수정 가능")
+	@Operation(summary = "파트너 계좌 수정 API", description = "파트너 계좌 수정 : bank, account만 수정 가능")
 	public BaseResponse<Void> updateAccount(
 			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
 			@RequestBody ModifyPartnerReqVo vo) {
@@ -161,7 +161,7 @@ public class PartnerController {
 	}
 
 	@PutMapping("/chattime")
-	@Operation(summary = "파트너 채팅 가능 시간 수정 API", description = "파트너 소개 수정 : startTime, endTime만 수정 가능")
+	@Operation(summary = "파트너 채팅 시간 수정 API", description = "파트너 채팅 시간 수정 : startTime, endTime만 수정 가능")
 	public BaseResponse<Void> updateChatTime(
 			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
 			@RequestBody ModifyPartnerReqVo vo) {
@@ -177,6 +177,16 @@ public class PartnerController {
 			@RequestBody ModifyPartnerReqVo vo) {
 		checkUuid(uuid);
 		partnerService.updateAverageTime(uuid, modelMapper.map(vo, ModifyPartnerReqDto.class));
+		return new BaseResponse<>();
+	}
+
+	@PutMapping("/averagePrice")
+	@Operation(summary = "파트너 코디 평균 가격 수정 API", description = "파트너 평균 가격 수정 : averagePrice만 수정 가능")
+	public BaseResponse<Void> updateAveragePrice(
+			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
+			@RequestBody ModifyPartnerReqVo vo) {
+		checkUuid(uuid);
+		partnerService.updateAveragePrice(uuid, modelMapper.map(vo, ModifyPartnerReqDto.class));
 		return new BaseResponse<>();
 	}
 

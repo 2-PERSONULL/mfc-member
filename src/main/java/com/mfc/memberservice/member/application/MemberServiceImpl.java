@@ -157,13 +157,13 @@ public class MemberServiceImpl implements MemberService {
 				.id(user.getId())
 				.nickname(nickname)
 				.profileImage(user.getProfileImage())
-				.topSize(user.getTopSize())
+				.topSize(user.getTopSize().toString())
 				.height(user.getHeight())
 				.weight(user.getWeight())
 				.imageAlt(user.getImageAlt())
 				.shoeSize(user.getShoeSize())
-				.bottomSize(user.getBottomSize())
-				.bodyType(user.getBodyType())
+				.bottomSize(user.getBottomSize().toString())
+				.bodyType(user.getBodyType().toString())
 				.build()
 		);
 	}

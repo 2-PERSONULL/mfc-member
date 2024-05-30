@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 				.bottomSize(dto.getBottomSize()) // 수정
 				.topSize(dto.getTopSize()) // 수정
 				.shoeSize(dto.getShoeSize()) // 수정
-				.bodyType(user.getBodyType())
+				.bodyType(user.getBodyType().toString())
 				.build()
 		);
 	}
@@ -67,10 +67,10 @@ public class UserServiceImpl implements UserService {
 				.imageAlt("Profile Image") // 수정
 				.height(user.getHeight())
 				.weight(user.getWeight())
-				.bottomSize(user.getBottomSize())
-				.topSize(user.getTopSize())
+				.bottomSize(user.getBottomSize().toString())
+				.topSize(user.getTopSize().toString())
 				.shoeSize(user.getShoeSize())
-				.bodyType(user.getBodyType())
+				.bodyType(user.getBodyType().toString())
 				.build()
 		);
 	}
@@ -86,8 +86,8 @@ public class UserServiceImpl implements UserService {
 				.imageAlt(user.getImageAlt())
 				.height(dto.getHeight()) // 수정
 				.weight(dto.getWeight()) // 수정
-				.bottomSize(user.getBottomSize())
-				.topSize(user.getTopSize())
+				.bottomSize(user.getBottomSize().toString())
+				.topSize(user.getTopSize().toString())
 				.shoeSize(user.getShoeSize())
 				.bodyType(dto.getBodyType()) // 수정
 				.build()

@@ -13,4 +13,5 @@ public class ModifyPartnerReqDto {
 	private String bank;
 	private String account;
 	private Integer averageDate;
+	private Integer averagePrice;
 }
