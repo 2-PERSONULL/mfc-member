@@ -52,6 +52,7 @@ public class PartnerServiceImpl implements PartnerService {
 				.bank(partner.getBank())
 				.startTime(partner.getStartTime())
 				.endTime(partner.getEndTime())
+				.averagePrice(partner.getAveragePrice())
 				.build());
 	}
 
@@ -168,6 +169,7 @@ public class PartnerServiceImpl implements PartnerService {
 				.bank(partner.getBank())
 				.startTime(partner.getStartTime())
 				.endTime(partner.getEndTime())
+				.averagePrice(partner.getAveragePrice())
 				.build());
 	}
 
@@ -186,6 +188,7 @@ public class PartnerServiceImpl implements PartnerService {
 				.bank(dto.getBank()) // 수정
 				.startTime(partner.getStartTime())
 				.endTime(partner.getEndTime())
+				.averagePrice(partner.getAveragePrice())
 				.build());
 	}
 
@@ -204,6 +207,7 @@ public class PartnerServiceImpl implements PartnerService {
 				.bank(partner.getBank())
 				.startTime(partner.getStartTime())
 				.endTime(partner.getEndTime())
+				.averagePrice(partner.getAveragePrice())
 				.build());
 	}
 
@@ -222,7 +226,28 @@ public class PartnerServiceImpl implements PartnerService {
 				.bank(partner.getBank())
 				.startTime(dto.getStartTime()) // 수정
 				.endTime(dto.getEndTime()) // 수정
+				.averagePrice(partner.getAveragePrice())
 				.build());
+	}
+
+	@Override
+	public void updateAveragePrice(String uuid, ModifyPartnerReqDto dto) {
+		Partner partner = isExist(uuid);
+
+		partnerRepository.save(Partner.builder()
+				.id(partner.getId())
+				.profileImage(partner.getProfileImage())
+				.nickname(partner.getNickname())
+				.imageAlt(partner.getImageAlt())
+				.description(partner.getDescription())
+				.account(partner.getAccount())
+				.averageDate(partner.getAverageDate())
+				.bank(partner.getBank())
+				.startTime(partner.getStartTime())
+				.endTime(partner.getEndTime())
+				.averagePrice(dto.getAveragePrice()) // 수정
+				.build()
+		);
 	}
 
 	@Override

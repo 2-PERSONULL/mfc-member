@@ -31,10 +31,12 @@ public class Partner extends BaseEntity {
 	private Integer startTime;
 	private Integer endTime;
 	private Integer averageDate;
+	private Integer averagePrice;
 
 	@Builder
 	public Partner(Long id, String uuid, String nickname, String profileImage, String account, String description,
-			Integer averageDate, String imageAlt, String bank, Integer startTime, Integer endTime) {
+			Integer averageDate, String imageAlt, String bank, Integer startTime,
+			Integer endTime, Integer averagePrice) {
 		this.id = id;
 		this.uuid = uuid;
 		this.nickname = nickname;
@@ -46,5 +48,6 @@ public class Partner extends BaseEntity {
 		this.bank = bank;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.averagePrice = averagePrice;
 	}
 }
