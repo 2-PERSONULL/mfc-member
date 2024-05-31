@@ -20,6 +20,8 @@ public class Career {
 	private Long id;
 	@Column(updatable = false, nullable = false)
 	private String partnerId;
+	@Column(updatable = false, nullable = false, length = 30)
+	private String partnerCode;
 	@Column(length = 50, nullable = false)
 	private String title;
 	@Column(length = 100)
@@ -29,12 +31,13 @@ public class Career {
 
 	@Builder
 	public Career(Long id, String partnerId, String title, String description, LocalDate startDate,
-			LocalDate finishDate) {
+			LocalDate finishDate, String partnerCode) {
 		this.id = id;
 		this.partnerId = partnerId;
 		this.title = title;
 		this.description = description;
 		this.startDate = startDate;
 		this.finishDate = finishDate;
+		this.partnerCode = partnerCode;
 	}
 }
