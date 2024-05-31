@@ -7,23 +7,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.Career;
-import com.mfc.memberservice.member.domain.PriceOption;
 import com.mfc.memberservice.member.domain.Partner;
+import com.mfc.memberservice.member.domain.PriceOption;
 import com.mfc.memberservice.member.domain.Sns;
 import com.mfc.memberservice.member.dto.req.CareerReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyPartnerReqDto;
 import com.mfc.memberservice.member.dto.req.OptionReqDto;
-import com.mfc.memberservice.member.dto.req.SnsDto;
 import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
 import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.OptionDto;
 import com.mfc.memberservice.member.dto.resp.OptionListRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
+import com.mfc.memberservice.member.dto.resp.SnsDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 import com.mfc.memberservice.member.infrastructure.CareerRepository;
-import com.mfc.memberservice.member.infrastructure.PriceOptionRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
+import com.mfc.memberservice.member.infrastructure.PriceOptionRepository;
 import com.mfc.memberservice.member.infrastructure.SnsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -58,11 +58,13 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public void updateSns(String uuid, UpdateSnsReqDto dto) {
+		Partner partner = isExist(uuid);
 		snsRepository.deleteByPartnerId(uuid);
 		dto.getSns()
 				.forEach(sns -> snsRepository.save(Sns.builder()
 						.type(sns.getType())
 						.partnerId(uuid)
+						.partnerCode(partner.getPartnerCode())
 						.snsUrl(sns.getSnsUrl())
 						.build())
 				);
@@ -70,9 +72,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public SnsListRespDto getSnsList(String partnerId) {
+	public SnsListRespDto getSnsList(String partnerCode) {
 		return SnsListRespDto.builder()
-				.sns(snsRepository.findByPartnerId(partnerId)
+				.sns(snsRepository.findByPartnerCode(partnerCode)
 						.stream()
 						.map(SnsDto::new)
 						.toList())
@@ -81,9 +83,10 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public void createCareer(String uuid, CareerReqDto dto) {
-		isExist(uuid);
+		Partner partner = isExist(uuid);
 		careerRepository.save(Career.builder()
 				.partnerId(uuid)
+				.partnerCode(partner.getPartnerCode())
 				.title(dto.getTitle())
 				.description(dto.getDescription())
 				.startDate(dto.getStartDate())
@@ -114,9 +117,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public CareerListRespDto getCareerList(String partnerId) {
+	public CareerListRespDto getCareerList(String partnerCode) {
 		return CareerListRespDto.builder()
-				.careers(careerRepository.findByPartnerId(partnerId)
+				.careers(careerRepository.findByPartnerCode(partnerCode)
 						.stream()
 						.map(CareerDto::new)
 						.toList())
@@ -262,8 +265,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public PartnerPortfolioRespDto getPortfolio(String uuid) {
-		Partner partner = isExist(uuid);
+	public PartnerPortfolioRespDto getPortfolio(String partnerCode) {
+		Partner partner = partnerRepository.findByPartnerCode(partnerCode)
+				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
 
 		return PartnerPortfolioRespDto.builder()
 				.description(partner.getDescription())

@@ -2,8 +2,11 @@ package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,10 +33,12 @@ import com.mfc.memberservice.style.domain.FavoriteStyle;
 import com.mfc.memberservice.style.infrastructure.FavoriteStyleRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 	private final MemberRepository memberRepository;
 	private final UserRepository userRepository;
@@ -158,6 +163,7 @@ public class AuthServiceImpl implements AuthService {
 	private void createPartner(String uuid, String nickname) {
 		partnerRepository.save(Partner.builder()
 				.uuid(uuid)
+				.partnerCode(createPartnerCode())
 				.nickname(nickname)
 				.build());
 	}
@@ -182,5 +188,18 @@ public class AuthServiceImpl implements AuthService {
 		return smsRepository.hasKey(dto.getPhone()) &&
 				smsRepository.getSmsCode(dto.getPhone())
 						.equals(dto.getCode());
+	}
+
+	// 파트너 코드 생성
+	public static String createPartnerCode() {
+		long currentTimeMillis = System.currentTimeMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		String timestamp = sdf.format(new Date(currentTimeMillis));
+
+		Random rand = new Random();
+		int randomNumber = rand.nextInt(90000) + 10000;
+		log.info("code={}", rand + timestamp);
+
+		return randomNumber + timestamp;
 	}
 }

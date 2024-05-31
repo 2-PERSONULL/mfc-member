@@ -9,10 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.mfc.memberservice.member.domain.Career;
+import com.mfc.memberservice.member.domain.Partner;
 
 public interface CareerRepository extends JpaRepository<Career, Long> {
 	Optional<Career> findByIdAndPartnerId(Long id, String partnerId);
 	List<Career> findByPartnerId(String partnerId);
+	List<Career> findByPartnerCode(String partnerCode);
 
 	@Modifying(flushAutomatically = true)
 	@Query("delete from Career c where c.id = :id and c.partnerId = :partnerId")

@@ -12,11 +12,11 @@ import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 public interface PartnerService {
 	void updateProfileImage(String uuid, ModifyPartnerReqDto dto);
 	void updateSns(String uuid, UpdateSnsReqDto dto);
-	SnsListRespDto getSnsList(String partnerId);
+	SnsListRespDto getSnsList(String partnerCode);
 	void createCareer(String uuid, CareerReqDto dto);
 	void updateCareer(String uuid, Long careerId, CareerReqDto dto);
 	void deleteCareer(String uuid, Long careerId);
-	CareerListRespDto getCareerList(String partnerId);
+	CareerListRespDto getCareerList(String partnerCode);
 	void createOption(String uuid, OptionReqDto dto);
 	void updateOption(String partnerId, Long optionId, OptionReqDto dto);
 	void deleteOption(String partnerId, Long optionId);
@@ -26,5 +26,5 @@ public interface PartnerService {
 	void updateAverageTime(String uuid, ModifyPartnerReqDto dto);
 	void updateChatTime(String uuid, ModifyPartnerReqDto dto);
 	void updateAveragePrice(String uuid, ModifyPartnerReqDto dto);
-	PartnerPortfolioRespDto getPortfolio(String uuid);
+	PartnerPortfolioRespDto getPortfolio(String partnerCode);
 }

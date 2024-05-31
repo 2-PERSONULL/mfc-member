@@ -13,6 +13,8 @@ import com.mfc.memberservice.member.domain.User;
 public interface PartnerRepository extends JpaRepository<Partner, Long> {
 	Optional<Partner> findByNickname(String nickname);
 	Optional<Partner> findByUuid(String Uuid);
+	Optional<Partner> findByPartnerCode(String partnerCode);
+
 	@Modifying(flushAutomatically = true)
 	@Query("Delete from Partner p where p.uuid = :uuid")
 	void deleteByUuid(@Param("uuid") String uuid);
