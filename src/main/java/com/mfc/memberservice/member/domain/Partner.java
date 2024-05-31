@@ -20,6 +20,8 @@ public class Partner extends BaseEntity {
 	private Long id;
 	@Column(updatable = false)
 	private String uuid;
+	@Column(updatable = false, nullable = false, unique = true, length = 30)
+	private String partnerCode;
 	@Column(nullable = false, length = 20)
 	private String nickname;
 	private String profileImage;
@@ -36,7 +38,7 @@ public class Partner extends BaseEntity {
 	@Builder
 	public Partner(Long id, String uuid, String nickname, String profileImage, String account, String description,
 			Integer averageDate, String imageAlt, String bank, Integer startTime,
-			Integer endTime, Integer averagePrice) {
+			Integer endTime, Integer averagePrice, String partnerCode) {
 		this.id = id;
 		this.uuid = uuid;
 		this.nickname = nickname;
@@ -49,5 +51,6 @@ public class Partner extends BaseEntity {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.averagePrice = averagePrice;
+		this.partnerCode = partnerCode;
 	}
 }

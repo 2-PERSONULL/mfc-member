@@ -129,6 +129,7 @@ public class MemberServiceImpl implements MemberService {
 			if(partnerRepository.findByUuid(uuid).isEmpty()) {
 				partnerRepository.save(Partner.builder()
 						.uuid(uuid)
+						.partnerCode(AuthServiceImpl.createPartnerCode())
 						.nickname("partner" + (int) (Math.random() * 9000) + 1000)
 						.build()
 				);
