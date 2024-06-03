@@ -7,4 +7,5 @@ public class SignInRespVo {
 	private String uuid;
 	private String accessToken;
 	private String refreshToken;
+	private String partnerCode;
 }
