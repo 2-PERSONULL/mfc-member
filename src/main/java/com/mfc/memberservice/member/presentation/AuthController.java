@@ -74,7 +74,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signin")
-	@Operation(summary = "로그인 API", description = "로그인 성공 시 토큰, uuid, role 반환")
+	@Operation(summary = "로그인 API", description = "로그인 성공 시 토큰, uuid, partnerCode 반환")
 	public BaseResponse<SignInRespVo> signIn(@RequestBody SignInReqVo vo, HttpServletResponse resp) {
 		SignInRespDto dto = authService.signIn(modelMapper.map(vo, SignInReqDto.class));
 		resp.addHeader("accessToken", dto.getAccessToken());

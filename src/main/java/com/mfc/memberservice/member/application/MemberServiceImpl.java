@@ -2,6 +2,8 @@ package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,6 +152,7 @@ public class MemberServiceImpl implements MemberService {
 				.uuid(member.getUuid())
 				.accessToken(tokenProvider.getAccessToken(uuid))
 				.refreshToken(tokenProvider.gerRefreshToken(uuid))
+				.partnerCode(isPartner(uuid))
 				.build();
 	}
 
@@ -180,5 +183,10 @@ public class MemberServiceImpl implements MemberService {
 				.account(partner.getAccount())
 				.build()
 		);
+	}
+
+	private String isPartner(String uuid) {
+		Optional<Partner> partner = partnerRepository.findByUuid(uuid);
+		return partner.isEmpty() ? null : partner.get().getPartnerCode();
 	}
 }
