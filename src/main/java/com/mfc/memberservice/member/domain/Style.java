@@ -1,4 +1,4 @@
-package com.mfc.memberservice.style.domain;
+package com.mfc.memberservice.member.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

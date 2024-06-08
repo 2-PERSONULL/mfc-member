@@ -1,8 +1,8 @@
-package com.mfc.memberservice.style.infrastructure;
+package com.mfc.memberservice.member.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.mfc.memberservice.style.domain.Style;
+import com.mfc.memberservice.member.domain.Style;
 
 public interface StyleRepository extends JpaRepository<Style, Long> {
 }

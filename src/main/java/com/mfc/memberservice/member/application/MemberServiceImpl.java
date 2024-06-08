@@ -20,8 +20,8 @@ import com.mfc.memberservice.member.dto.resp.SignInRespDto;
 import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
-import com.mfc.memberservice.style.domain.FavoriteStyle;
-import com.mfc.memberservice.style.infrastructure.FavoriteStyleRepository;
+import com.mfc.memberservice.member.domain.FavoriteStyle;
+import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
 
 import lombok.RequiredArgsConstructor;
 
