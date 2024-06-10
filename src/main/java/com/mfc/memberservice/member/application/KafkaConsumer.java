@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.FavoriteStyle;
-import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
-import com.mfc.memberservice.member.dto.kafka.ProfileDto;
+import com.mfc.memberservice.member.dto.kafka.DeleteProfileDto;
+import com.mfc.memberservice.member.dto.kafka.InsertProfileDto;
 import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
@@ -26,8 +26,8 @@ public class KafkaConsumer {
 	private final PartnerRepository partnerRepository;
 	private final FavoriteStyleRepository favoriteStyleRepository;
 
-	@KafkaListener(topics = "profile")
-	public void insertProfile(ProfileDto dto) {
+	@KafkaListener(topics = "profile-insert", containerFactory = "insertProfileListener")
+	public void insertProfile(InsertProfileDto dto) {
 		if(dto.getRole().equals("USER")) { // 유저
 			userRepository.save(User.builder()
 					.uuid(dto.getUuid())
@@ -42,11 +42,20 @@ public class KafkaConsumer {
 			throw new BaseException(NO_EXIT_ROLE);
 		}
 
-		dto.getFavoriteStyles().stream()
+		dto.getFavoriteStyles()
 				.forEach(i -> favoriteStyleRepository.save(
 						FavoriteStyle.builder()
 								.uuid(dto.getUuid())
 								.styleId(i)
 								.build()));
+	}
+
+	@KafkaListener(topics = "profile-delete", containerFactory = "deleteProfileListener")
+	public void deleteProfile(DeleteProfileDto dto) {
+		String uuid = dto.getUuid();
+
+		userRepository.deleteByUuid(uuid);
+		partnerRepository.deleteByUuid(uuid);
+		favoriteStyleRepository.deleteByUuid(uuid);
 	}
 }
