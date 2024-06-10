@@ -21,6 +21,7 @@ import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
 import com.mfc.memberservice.member.vo.req.ModifyFavoriteStyleReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyPasswordReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
+import com.mfc.memberservice.member.vo.resp.FavoriteStyleRespVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 import com.mfc.memberservice.member.vo.resp.SignInRespVo;
 
@@ -91,6 +92,14 @@ public class MemberController {
 
 		memberService.modifyFavoriteStyle(uuid, modelMapper.map(vo, ModifyFavoriteStyleReqDto.class));
 		return new BaseResponse<>();
+	}
+
+	@GetMapping("/favoritstyle")
+	@Operation(summary = "회원 별 선호 스타일 조회 API", description = "getUUID = 조회할 회원의 UUID")
+	public BaseResponse<FavoriteStyleRespVo> getFavoriteStyles(
+			@RequestHeader(value = "getUUID", defaultValue = "") String uuid) {
+		return new BaseResponse<>(modelMapper.map(
+				memberService.getFavoriteStyle(uuid), FavoriteStyleRespVo.class));
 	}
 
 	@PostMapping("/resign")
