@@ -20,7 +20,7 @@ public class Partner extends BaseEntity {
 	private Long id;
 	@Column(updatable = false)
 	private String uuid;
-	@Column(updatable = false, nullable = false, unique = true, length = 30)
+	@Column(updatable = false, unique = true, length = 30)
 	private String partnerCode;
 	@Column(nullable = false, length = 20)
 	private String nickname;
