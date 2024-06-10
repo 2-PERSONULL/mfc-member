@@ -15,13 +15,14 @@ import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
+import com.mfc.memberservice.member.dto.resp.FavoriteStyleRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.mfc.memberservice.member.dto.resp.SignInRespDto;
 import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
-import com.mfc.memberservice.style.domain.FavoriteStyle;
-import com.mfc.memberservice.style.infrastructure.FavoriteStyleRepository;
+import com.mfc.memberservice.member.domain.FavoriteStyle;
+import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -99,6 +100,15 @@ public class MemberServiceImpl implements MemberService {
 								.uuid(uuid)
 								.styleId(i)
 								.build()));
+	}
+
+	@Override
+	public FavoriteStyleRespDto getFavoriteStyle(String uuid) {
+		return FavoriteStyleRespDto.builder()
+				.favoriteStyles(favoriteStyleRepository.getFavoriteStyles(uuid)
+						.stream()
+						.toList())
+				.build();
 	}
 
 	@Override
