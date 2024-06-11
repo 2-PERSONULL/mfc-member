@@ -132,16 +132,10 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public SignInRespDto changeRole(String uuid, String role) {
-		Member member = memberRepository.findByUuid(uuid)
-				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
-
-		Member changeRole = null;
-
 		if(role.equals("USER")) {
 			if(partnerRepository.findByUuid(uuid).isEmpty()) {
 				partnerRepository.save(Partner.builder()
 						.uuid(uuid)
-						.partnerCode(AuthServiceImpl.createPartnerCode())
 						.nickname("partner" + (int) (Math.random() * 9000) + 1000)
 						.build()
 				);
@@ -159,10 +153,9 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		return SignInRespDto.builder()
-				.uuid(member.getUuid())
+				.uuid(uuid)
 				.accessToken(tokenProvider.getAccessToken(uuid))
 				.refreshToken(tokenProvider.gerRefreshToken(uuid))
-				.partnerCode(isPartner(uuid))
 				.build();
 	}
 
@@ -193,10 +186,5 @@ public class MemberServiceImpl implements MemberService {
 				.account(partner.getAccount())
 				.build()
 		);
-	}
-
-	private String isPartner(String uuid) {
-		Optional<Partner> partner = partnerRepository.findByUuid(uuid);
-		return partner.isEmpty() ? null : partner.get().getPartnerCode();
 	}
 }

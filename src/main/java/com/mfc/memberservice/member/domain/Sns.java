@@ -25,8 +25,6 @@ public class Sns {
 	private Long id;
 	@Column(updatable = false)
 	private String partnerId;
-	@Column(updatable = false, nullable = false, length = 30)
-	private String partnerCode;
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private SnsType type;
@@ -34,7 +32,7 @@ public class Sns {
 	private String snsUrl;
 
 	@Builder
-	public Sns(Long id, String partnerId, String type, String snsUrl, String partnerCode) {
+	public Sns(Long id, String partnerId, String type, String snsUrl) {
 		this.id = id;
 		this.partnerId = partnerId;
 
@@ -47,6 +45,5 @@ public class Sns {
 		}
 
 		this.snsUrl = snsUrl;
-		this.partnerCode = partnerCode;
 	}
 }

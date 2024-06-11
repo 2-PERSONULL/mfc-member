@@ -58,13 +58,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public void updateSns(String uuid, UpdateSnsReqDto dto) {
-		Partner partner = isExist(uuid);
+		isExist(uuid);
 		snsRepository.deleteByPartnerId(uuid);
 		dto.getSns()
 				.forEach(sns -> snsRepository.save(Sns.builder()
 						.type(sns.getType())
 						.partnerId(uuid)
-						.partnerCode(partner.getPartnerCode())
 						.snsUrl(sns.getSnsUrl())
 						.build())
 				);
@@ -72,9 +71,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public SnsListRespDto getSnsList(String partnerCode) {
+	public SnsListRespDto getSnsList(String partnerId) {
 		return SnsListRespDto.builder()
-				.sns(snsRepository.findByPartnerCode(partnerCode)
+				.sns(snsRepository.findByPartnerId(partnerId)
 						.stream()
 						.map(SnsDto::new)
 						.toList())
@@ -83,10 +82,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public void createCareer(String uuid, CareerReqDto dto) {
-		Partner partner = isExist(uuid);
+		isExist(uuid);
 		careerRepository.save(Career.builder()
 				.partnerId(uuid)
-				.partnerCode(partner.getPartnerCode())
 				.title(dto.getTitle())
 				.description(dto.getDescription())
 				.startDate(dto.getStartDate())
@@ -117,9 +115,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public CareerListRespDto getCareerList(String partnerCode) {
+	public CareerListRespDto getCareerList(String partnerId) {
 		return CareerListRespDto.builder()
-				.careers(careerRepository.findByPartnerCode(partnerCode)
+				.careers(careerRepository.findByPartnerId(partnerId)
 						.stream()
 						.map(CareerDto::new)
 						.toList())
@@ -265,8 +263,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public PartnerPortfolioRespDto getPortfolio(String partnerCode) {
-		Partner partner = partnerRepository.findByPartnerCode(partnerCode)
+	public PartnerPortfolioRespDto getPortfolio(String partnerId) {
+		Partner partner = partnerRepository.findByUuid(partnerId)
 				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
 
 		return PartnerPortfolioRespDto.builder()

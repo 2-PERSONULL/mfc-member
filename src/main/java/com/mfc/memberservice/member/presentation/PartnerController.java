@@ -63,11 +63,12 @@ public class PartnerController {
 		return new BaseResponse<>();
 	}
 
-	@GetMapping("/sns/{partnerCode}")
+	@GetMapping("/sns")
 	@Operation(summary = "파트너 SNS 조회 API", description = "파트너 포트폴리오 : sns 목록 조회")
-	public BaseResponse<SnsListRespVo> updateSns(@PathVariable String partnerCode) {
+	public BaseResponse<SnsListRespVo> updateSns(
+			@RequestHeader(value = "partnerId", defaultValue = "") String partnerId) {
 		return new BaseResponse<>(modelMapper.map(
-				partnerService.getSnsList(partnerCode), SnsListRespVo.class));
+				partnerService.getSnsList(partnerId), SnsListRespVo.class));
 	}
 
 	@PostMapping("/career")
@@ -99,10 +100,11 @@ public class PartnerController {
 		return new BaseResponse<>();
 	}
 
-	@GetMapping("/career/{partnerCode}")
+	@GetMapping("/career")
 	@Operation(summary = "파트너 경력 조회 API", description = "파트너 포트폴리오 : 경력 목록 조회")
-	public BaseResponse<CareerListRespVo> getCareerList(@PathVariable String partnerCode) {
-		return new BaseResponse<>(modelMapper.map(partnerService.getCareerList(partnerCode), CareerListRespVo.class));
+	public BaseResponse<CareerListRespVo> getCareerList(
+			@RequestHeader(value = "partnerId", defaultValue = "") String partnerId) {
+		return new BaseResponse<>(modelMapper.map(partnerService.getCareerList(partnerId), CareerListRespVo.class));
 	}
 
 	// @PostMapping("/option")
@@ -190,11 +192,12 @@ public class PartnerController {
 		return new BaseResponse<>();
 	}
 
-	@GetMapping("/{partnerCode}")
+	@GetMapping()
 	@Operation(summary = "파트너 포트폴리오 조회 API", description = "한 줄 소개, 채팅 가능 시간, 평균 소요 기간 조회")
-	public BaseResponse<PartnerPortfolioRespVo> getPortfolio(@PathVariable String partnerCode) {
+	public BaseResponse<PartnerPortfolioRespVo> getPortfolio(
+			@RequestHeader(value = "partnerId", defaultValue = "") String partnerId) {
 		return new BaseResponse<>(modelMapper.map(
-				partnerService.getPortfolio(partnerCode), PartnerPortfolioRespVo.class));
+				partnerService.getPortfolio(partnerId), PartnerPortfolioRespVo.class));
 	}
 
 	private void checkUuid(String uuid) {

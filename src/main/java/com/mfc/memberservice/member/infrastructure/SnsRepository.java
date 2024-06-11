@@ -13,7 +13,6 @@ import com.mfc.memberservice.member.domain.Sns;
 
 public interface SnsRepository extends JpaRepository<Sns, Long> {
 	List<Sns> findByPartnerId(String partnerId);
-	List<Sns> findByPartnerCode(String partnerCode);
 
 	@Modifying(flushAutomatically = true)
 	@Query("delete from Sns s where s.partnerId = :uuid")

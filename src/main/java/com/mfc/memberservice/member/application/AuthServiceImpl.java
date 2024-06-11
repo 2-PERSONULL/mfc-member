@@ -117,7 +117,6 @@ public class AuthServiceImpl implements AuthService {
 				.accessToken(tokenProvider.getAccessToken(member.getUuid()))
 				.refreshToken(tokenProvider.gerRefreshToken(member.getUuid()))
 				.uuid(member.getUuid())
-				.partnerCode(isPartner(member.getUuid()))
 				.build();
 	}
 
@@ -164,7 +163,6 @@ public class AuthServiceImpl implements AuthService {
 	private void createPartner(String uuid, String nickname) {
 		partnerRepository.save(Partner.builder()
 				.uuid(uuid)
-				.partnerCode(createPartnerCode())
 				.nickname(nickname)
 				.build());
 	}
@@ -202,10 +200,5 @@ public class AuthServiceImpl implements AuthService {
 		log.info("code={}", rand + timestamp);
 
 		return randomNumber + timestamp;
-	}
-
-	private String isPartner(String uuid) {
-		Optional<Partner> partner = partnerRepository.findByUuid(uuid);
-		return partner.isEmpty() ? null : partner.get().getPartnerCode();
 	}
 }
