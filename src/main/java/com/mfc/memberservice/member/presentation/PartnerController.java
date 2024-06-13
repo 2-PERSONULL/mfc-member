@@ -28,6 +28,7 @@ import com.mfc.memberservice.member.vo.req.OptionReqVo;
 import com.mfc.memberservice.member.vo.req.UpdateSnsReqVo;
 import com.mfc.memberservice.member.vo.resp.CareerListRespVo;
 import com.mfc.memberservice.member.vo.resp.OptionListRespVo;
+import com.mfc.memberservice.member.vo.resp.PartnerAccountRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerPortfolioRespVo;
 import com.mfc.memberservice.member.vo.resp.SnsListRespVo;
 
@@ -192,13 +193,23 @@ public class PartnerController {
 		return new BaseResponse<>();
 	}
 
-	@GetMapping()
+	@GetMapping
 	@Operation(summary = "파트너 포트폴리오 조회 API", description = "한 줄 소개, 채팅 가능 시간, 평균 소요 기간 조회")
 	public BaseResponse<PartnerPortfolioRespVo> getPortfolio(
 			@RequestHeader(value = "partnerId", defaultValue = "") String partnerId) {
 		return new BaseResponse<>(modelMapper.map(
 				partnerService.getPortfolio(partnerId), PartnerPortfolioRespVo.class));
 	}
+
+	@GetMapping("/account")
+	@Operation(summary = "파트너 계좌 정보 조회 API", description = "은행, 계좌정보 조회")
+	public BaseResponse<PartnerAccountRespVo> getAccount(
+			@RequestHeader(value = "UUID", defaultValue = "") String partnerId) {
+		checkUuid(partnerId);
+		return new BaseResponse<>(modelMapper.map(
+				partnerService.getAccount(partnerId), PartnerAccountRespVo.class));
+	}
+
 
 	private void checkUuid(String uuid) {
 		if(!StringUtils.hasText(uuid)) {

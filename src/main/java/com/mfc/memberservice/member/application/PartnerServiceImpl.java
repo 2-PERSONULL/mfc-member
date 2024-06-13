@@ -18,6 +18,7 @@ import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.OptionDto;
 import com.mfc.memberservice.member.dto.resp.OptionListRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnerAccountRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
 import com.mfc.memberservice.member.dto.resp.SnsDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
@@ -264,8 +265,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	@Transactional(readOnly = true)
 	public PartnerPortfolioRespDto getPortfolio(String partnerId) {
-		Partner partner = partnerRepository.findByUuid(partnerId)
-				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+		Partner partner = isExist(partnerId);
 
 		return PartnerPortfolioRespDto.builder()
 				.description(partner.getDescription())
@@ -273,6 +273,16 @@ public class PartnerServiceImpl implements PartnerService {
 				.endTime(partner.getEndTime())
 				.averageDate(partner.getAverageDate())
 				.averagePrice(partner.getAveragePrice())
+				.build();
+	}
+
+	@Override
+	public PartnerAccountRespDto getAccount(String partnerId) {
+		Partner partner = isExist(partnerId);
+
+		return PartnerAccountRespDto.builder()
+				.bank(partner.getBank())
+				.account(partner.getAccount())
 				.build();
 	}
 
