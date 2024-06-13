@@ -272,6 +272,7 @@ public class PartnerServiceImpl implements PartnerService {
 				.startTime(partner.getStartTime())
 				.endTime(partner.getEndTime())
 				.averageDate(partner.getAverageDate())
+				.averagePrice(partner.getAveragePrice())
 				.build();
 	}
 
