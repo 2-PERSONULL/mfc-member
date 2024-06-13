@@ -1,16 +1,11 @@
 package com.mfc.memberservice.member.infrastructure;
 
 import static com.mfc.memberservice.member.domain.QFavoriteStyle.*;
-import static com.mfc.memberservice.member.domain.QMember.*;
-import static com.mfc.memberservice.member.domain.QPartner.*;
 import static com.mfc.memberservice.member.domain.QStyle.*;
-import static com.mfc.memberservice.member.domain.QUser.*;
 
 import java.util.List;
 
 import com.mfc.memberservice.member.dto.resp.FavoriteStyleDto;
-import com.mfc.memberservice.member.dto.resp.FavoriteStyleRespDto;
-import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 

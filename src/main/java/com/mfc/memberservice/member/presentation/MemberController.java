@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,12 +18,9 @@ import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.common.response.BaseResponse;
 import com.mfc.memberservice.member.application.MemberService;
 import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
-import com.mfc.memberservice.member.dto.req.ModifyMemberReqDto;
 import com.mfc.memberservice.member.vo.req.ModifyFavoriteStyleReqVo;
-import com.mfc.memberservice.member.vo.req.ModifyPasswordReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 import com.mfc.memberservice.member.vo.resp.FavoriteStyleRespVo;
-import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 import com.mfc.memberservice.member.vo.resp.SignInRespVo;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +37,12 @@ public class MemberController {
 	private final MemberService memberService;
 	private final ModelMapper modelMapper;
 
+	@GetMapping("/nickname/{nickname}")
+	@Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 확인")
+	public BaseResponse<Boolean> verifyNickname(@PathVariable String nickname) {
+		return new BaseResponse<>(memberService.verifyNickname(nickname));
+	}
+
 	@PutMapping("/nickname")
 	@Operation(summary = "닉네임 수정 API", description = "헤더의 ROLE 값으로 구분하여 역할에 따라 닉네임 수정")
 	public BaseResponse<Void> modifyNickname(
@@ -50,20 +54,6 @@ public class MemberController {
 		}
 
 		memberService.modifyNickname(uuid, role, vo.getNickname());
-		return new BaseResponse<>();
-	}
-
-	@PutMapping("/password")
-	@Operation(summary = "비밀번호 수정 API", description = "유저/파트너 공통 적용")
-	public BaseResponse<Void> modifyPassword(
-			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
-			@RequestBody @Validated ModifyPasswordReqVo vo) {
-
-		if(!StringUtils.hasText(uuid)) {
-			throw new BaseException(NO_REQUIRED_HEADER);
-		}
-
-		memberService.modifyPassword(uuid, modelMapper.map(vo, ModifyMemberReqDto.class));
 		return new BaseResponse<>();
 	}
 
@@ -87,17 +77,6 @@ public class MemberController {
 			@RequestHeader(value = "getUUID", defaultValue = "") String uuid) {
 		return new BaseResponse<>(modelMapper.map(
 				memberService.getFavoriteStyle(uuid), FavoriteStyleRespVo.class));
-	}
-
-	@PostMapping("/resign")
-	@Operation(summary = "회원 탈퇴 API", description = "유저/파트너 한 번에 탈퇴 (삭제)")
-	public BaseResponse<Void> resign(@RequestHeader(value = "UUID", defaultValue = "") String uuid) {
-		if(!StringUtils.hasText(uuid)) {
-			throw new BaseException(NO_REQUIRED_HEADER);
-		}
-
-		memberService.resign(uuid);
-		return new BaseResponse<>();
 	}
 
 	@PutMapping("/change")

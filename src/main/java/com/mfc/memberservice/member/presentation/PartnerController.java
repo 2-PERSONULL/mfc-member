@@ -20,14 +20,11 @@ import com.mfc.memberservice.common.response.BaseResponse;
 import com.mfc.memberservice.member.application.PartnerService;
 import com.mfc.memberservice.member.dto.req.CareerReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyPartnerReqDto;
-import com.mfc.memberservice.member.dto.req.OptionReqDto;
 import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
 import com.mfc.memberservice.member.vo.req.CareerReqVo;
 import com.mfc.memberservice.member.vo.req.ModifyPartnerReqVo;
-import com.mfc.memberservice.member.vo.req.OptionReqVo;
 import com.mfc.memberservice.member.vo.req.UpdateSnsReqVo;
 import com.mfc.memberservice.member.vo.resp.CareerListRespVo;
-import com.mfc.memberservice.member.vo.resp.OptionListRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerAccountRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerPortfolioRespVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
@@ -107,41 +104,6 @@ public class PartnerController {
 	public BaseResponse<CareerListRespVo> getCareerList(
 			@RequestHeader(value = "partnerId", defaultValue = "") String partnerId) {
 		return new BaseResponse<>(modelMapper.map(partnerService.getCareerList(partnerId), CareerListRespVo.class));
-	}
-
-	// @PostMapping("/option")
-	// @Operation(summary = "파트너 옵션 등록 API", description = "파트너 포트폴리오 : 옵션 등록")
-	public BaseResponse<Void> createOption(
-			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
-			@RequestBody @Validated OptionReqVo vo) {
-		checkUuid(uuid);
-		partnerService.createOption(uuid, modelMapper.map(vo, OptionReqDto.class));
-		return new BaseResponse<>();
-	}
-
-	// @PutMapping("/option/{optionId}")
-	// @Operation(summary = "파트너 옵션 수정 API", description = "파트너 포트폴리오 : 옵션 수정")
-	public BaseResponse<Void> modifyOption(@PathVariable Long optionId,
-			@RequestHeader(value = "UUID", defaultValue = "") String uuid,
-			@RequestBody @Validated OptionReqVo vo) {
-		checkUuid(uuid);
-		partnerService.updateOption(uuid, optionId, modelMapper.map(vo, OptionReqDto.class));
-		return new BaseResponse<>();
-	}
-
-	// @DeleteMapping("/option/{optionId}")
-	// @Operation(summary = "파트너 옵션 삭제 API", description = "파트너 포트폴리오 : 옵션 삭제")
-	public BaseResponse<Void> deleteOption(@PathVariable Long optionId,
-			@RequestHeader(value = "UUID", defaultValue = "") String uuid) {
-		checkUuid(uuid);
-		partnerService.deleteOption(uuid, optionId);
-		return new BaseResponse<>();
-	}
-
-	// @GetMapping("/option/{partnerId}")
-	// @Operation(summary = "파트너 가격 옵션 조회 API", description = "파트너 포트폴리오 : 가격 옵션 조회")
-	public BaseResponse<OptionListRespVo> getOptionList(@PathVariable String partnerId) {
-		return new BaseResponse<>(modelMapper.map(partnerService.getOptionList(partnerId), OptionListRespVo.class));
 	}
 
 	@PutMapping("/description")
