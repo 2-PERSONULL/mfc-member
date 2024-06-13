@@ -21,38 +21,6 @@ public class CustomRepositoryImpl implements CustomRepository {
 	private final JPAQueryFactory query;
 
 	@Override
-	public ProfileRespDto getUserProfile(String uuid) {
-		return query
-				.select(Projections.constructor(ProfileRespDto.class,
-						user.profileImage.as("profileImage"),
-						user.imageAlt.as("imageAlt"),
-						user.nickname.as("nickname"),
-						member.email.as("email")
-				))
-				.from(user)
-				.join(member)
-				.on(user.uuid.eq(member.uuid))
-				.where(user.uuid.eq(uuid))
-				.fetchOne();
-	}
-
-	@Override
-	public ProfileRespDto getPartnerProfile(String uuid) {
-		return query
-				.select(Projections.constructor(ProfileRespDto.class,
-						partner.profileImage.as("profileImage"),
-						partner.imageAlt.as("imageAlt"),
-						partner.nickname.as("nickname"),
-						member.email.as("email")
-				))
-				.from(partner)
-				.join(member)
-				.on(partner.uuid.eq(member.uuid))
-				.where(partner.uuid.eq(uuid))
-				.fetchOne();
-	}
-
-	@Override
 	public List<FavoriteStyleDto> getFavoriteStyles(String uuid) {
 		return query
 				.select(Projections.constructor(FavoriteStyleDto.class,

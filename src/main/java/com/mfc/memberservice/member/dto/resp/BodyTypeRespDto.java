@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ProfileRespDto {
-	private String nickname;
-	private String profileImage;
-	private String imageAlt;
+public class BodyTypeRespDto {
+	private Integer height;
+	private Integer weight;
+	private String bodyType;
 }

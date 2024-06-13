@@ -5,8 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ProfileRespDto {
-	private String nickname;
-	private String profileImage;
-	private String imageAlt;
+public class PartnerAccountRespDto {
+	private String bank;
+	private String account;
 }
