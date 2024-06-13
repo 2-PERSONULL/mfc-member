@@ -1,13 +1,12 @@
 package com.mfc.memberservice.member.dto.resp;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class ProfileRespDto {
+	private String nickname;
 	private String profileImage;
 	private String imageAlt;
-	private String nickname;
-	private String email;
 }

@@ -39,19 +39,6 @@ public class MemberController {
 	private final MemberService memberService;
 	private final ModelMapper modelMapper;
 
-	@GetMapping
-	@Operation(summary = "회원 기본 프로필 조회 API", description = "헤더의 ROLE 값으로 구분하여 역할에 따른 프로필 조회")
-	public BaseResponse<ProfileRespVo> getProfile(
-			@RequestHeader(name = "UUID", defaultValue = "") String uuid,
-			@RequestHeader(name = "Role", defaultValue = "") String role) {
-		if(!StringUtils.hasText(uuid) || !StringUtils.hasText(role)) {
-			throw new BaseException(NO_REQUIRED_HEADER);
-		}
-
-		return new BaseResponse<>(modelMapper.map(
-				memberService.getProfile(uuid, role), ProfileRespVo.class));
-	}
-
 	@PutMapping("/nickname")
 	@Operation(summary = "닉네임 수정 API", description = "헤더의 ROLE 값으로 구분하여 역할에 따라 닉네임 수정")
 	public BaseResponse<Void> modifyNickname(

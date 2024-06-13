@@ -4,8 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ProfileRespVo {
+	private String nickname;
 	private String profileImage;
 	private String imageAlt;
-	private String nickname;
-	private String email;
 }

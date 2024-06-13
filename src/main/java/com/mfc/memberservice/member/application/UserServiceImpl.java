@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.req.ModifyUserReqDto;
+import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -92,6 +93,17 @@ public class UserServiceImpl implements UserService {
 				.bodyType(dto.getBodyType()) // 수정
 				.build()
 		);
+	}
+
+	@Override
+	public ProfileRespDto getProfile(String userId) {
+		User user = isExist(userId);
+
+		return ProfileRespDto.builder()
+				.nickname(user.getNickname())
+				.profileImage(user.getProfileImage())
+				.imageAlt(user.getImageAlt())
+				.build();
 	}
 
 	private User isExist(String uuid) {

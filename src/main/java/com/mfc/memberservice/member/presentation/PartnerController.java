@@ -30,6 +30,7 @@ import com.mfc.memberservice.member.vo.resp.CareerListRespVo;
 import com.mfc.memberservice.member.vo.resp.OptionListRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerAccountRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerPortfolioRespVo;
+import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 import com.mfc.memberservice.member.vo.resp.SnsListRespVo;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -210,6 +211,13 @@ public class PartnerController {
 				partnerService.getAccount(partnerId), PartnerAccountRespVo.class));
 	}
 
+	@GetMapping("/profile")
+	@Operation(summary = "파트너 기본 프로필 조회 API", description = "닉네임, 프로필 이미지 조회")
+	public BaseResponse<ProfileRespVo> getProfile(
+			@RequestHeader(value = "partnerId", defaultValue = "") String partnerId) {
+		return new BaseResponse<>(modelMapper.map(
+				partnerService.getProfile(partnerId), ProfileRespVo.class));
+	}
 
 	private void checkUuid(String uuid) {
 		if(!StringUtils.hasText(uuid)) {
