@@ -2,8 +2,6 @@ package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
-import java.time.LocalDate;
-
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.FavoriteStyle;
-import com.mfc.memberservice.member.domain.Member;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.kafka.DeleteProfileDto;
@@ -21,7 +18,6 @@ import com.mfc.memberservice.member.dto.kafka.InsertProfileDto;
 import com.mfc.memberservice.member.dto.kafka.RequestMessage;
 import com.mfc.memberservice.member.dto.kafka.ResponseMessage;
 import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
-import com.mfc.memberservice.member.infrastructure.MemberRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
 
@@ -36,7 +32,6 @@ public class KafkaConsumer {
 	private final UserRepository userRepository;
 	private final PartnerRepository partnerRepository;
 	private final FavoriteStyleRepository favoriteStyleRepository;
-	private final MemberRepository memberRepository;
 	private final KafkaTemplate<String, String> kafkaTemplate;
 	private final ObjectMapper objectMapper;
 
@@ -83,8 +78,8 @@ public class KafkaConsumer {
 			// userId를 기반으로 사용자 조회
 			User user = userRepository.findByUuid(requestMessage.getUserId())
 				.orElseThrow(() -> new RuntimeException("User not found"));
-			Member member = memberRepository.findByUuid(requestMessage.getUserId())
-				.orElseThrow(() -> new RuntimeException("Member not found"));
+			// Member member = memberRepository.findByUuid(requestMessage.getUserId())
+			// 	.orElseThrow(() -> new RuntimeException("Member not found"));
 
 			// 메시지 생성
 			ResponseMessage responseMessage = ResponseMessage.builder().
@@ -94,8 +89,8 @@ public class KafkaConsumer {
 				deadline(requestMessage.getDeadline()).
 				userImageUrl(user.getProfileImage()).
 				userNickName(user.getNickname()).
-				userGender(member.getGender()).
-				userBirth(member.getBirth()).
+				userGender(null).
+				userBirth(null).
 				build();
 
 			// 새로운 토픽으로 메시지 전송
