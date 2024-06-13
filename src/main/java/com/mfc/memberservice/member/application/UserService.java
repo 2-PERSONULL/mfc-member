@@ -1,7 +1,9 @@
 package com.mfc.memberservice.member.application;
 
 import com.mfc.memberservice.member.dto.req.ModifyUserReqDto;
+import com.mfc.memberservice.member.dto.resp.BodyTypeRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
+import com.mfc.memberservice.member.dto.resp.SizeRespDto;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 
 public interface UserService {
@@ -10,4 +12,6 @@ public interface UserService {
 	void updateProfileImage(String uuid, ModifyUserReqDto dto);
 	void updateBodyType(String uuid, ModifyUserReqDto dto);
 	ProfileRespDto getProfile(String userId);
+	BodyTypeRespDto getBodyType(String userId);
+	SizeRespDto getSize(String userId);
 }

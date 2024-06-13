@@ -17,7 +17,9 @@ import com.mfc.memberservice.common.response.BaseResponseStatus;
 import com.mfc.memberservice.member.application.UserService;
 import com.mfc.memberservice.member.dto.req.ModifyUserReqDto;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
+import com.mfc.memberservice.member.vo.resp.BodyTypeRespVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
+import com.mfc.memberservice.member.vo.resp.SizeRespVo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,6 +53,14 @@ public class UserController {
 		return new BaseResponse<>();
 	}
 
+	@GetMapping("/size")
+	@Operation(summary = "유저 옷 사이즈 조회 API", description = "topSize, bottomSize, shoeSize 조회")
+	public BaseResponse<SizeRespVo> getSize(
+			@RequestHeader(name = "userId", defaultValue = "") String userId) {
+		return new BaseResponse<>(modelMapper.map(
+				userService.getSize(userId), SizeRespVo.class));
+	}
+
 	@PutMapping("/profileimage")
 	@Operation(summary = "유저 프로필 사진 수정 API", description = "profileImage만 수정 가능")
 	public BaseResponse<Void> updateProfileImage(
@@ -69,6 +79,14 @@ public class UserController {
 		checkUuid(uuid);
 		userService.updateBodyType(uuid, modelMapper.map(vo, ModifyUserReqDto.class));
 		return new BaseResponse<>();
+	}
+
+	@GetMapping("/bodyType")
+	@Operation(summary = "유저 체형 조회 API", description = "height, weight, bodyType 조회")
+	public BaseResponse<BodyTypeRespVo> getBodyType(
+			@RequestHeader(name = "userId", defaultValue = "") String userId) {
+		return new BaseResponse<>(modelMapper.map(
+				userService.getBodyType(userId), BodyTypeRespVo.class));
 	}
 
 	@GetMapping("/profile")
