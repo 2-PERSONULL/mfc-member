@@ -15,8 +15,10 @@ import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.kafka.DeleteProfileDto;
 import com.mfc.memberservice.member.dto.kafka.InsertProfileDto;
+import com.mfc.memberservice.member.dto.kafka.RequestAuthInfoDto;
 import com.mfc.memberservice.member.dto.kafka.RequestMessage;
 import com.mfc.memberservice.member.dto.kafka.ResponseMessage;
+import com.mfc.memberservice.member.dto.kafka.UserProfileResponse;
 import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
@@ -68,35 +70,22 @@ public class KafkaConsumer {
 		favoriteStyleRepository.deleteByUuid(uuid);
 	}
 
-	@KafkaListener(topics = "request-history-create", groupId = "request-history-group")
-	@Transactional
-	public void sendUserProfile(String message) {
+	@KafkaListener(topics = "user-info-request", groupId = "user-info-group")
+	public void handleUserInfoRequest(String message) {
 		try {
-			// JSON 메시지를 Java 객체로 변환
-			RequestMessage requestMessage = objectMapper.readValue(message, RequestMessage.class);
+			RequestAuthInfoDto requestDto = objectMapper.readValue(message, RequestAuthInfoDto.class);
+			String userId = requestDto.getUserId();
 
-			// userId를 기반으로 사용자 조회
-			User user = userRepository.findByUuid(requestMessage.getUserId())
+			User user = userRepository.findByUuid(userId)
 				.orElseThrow(() -> new RuntimeException("User not found"));
-			// Member member = memberRepository.findByUuid(requestMessage.getUserId())
-			// 	.orElseThrow(() -> new RuntimeException("Member not found"));
 
-			// 메시지 생성
-			ResponseMessage responseMessage = ResponseMessage.builder().
-				requestId(requestMessage.getRequestId()).
-				userId(requestMessage.getUserId()).
-				partnerId(requestMessage.getPartnerId()).
-				deadline(requestMessage.getDeadline()).
-				userImageUrl(user.getProfileImage()).
-				userNickName(user.getNickname()).
-				userGender(null).
-				userBirth(null).
-				build();
+			UserProfileResponse response = UserProfileResponse.builder()
+				.userImageUrl(user.getProfileImage())
+				.userNickName(user.getNickname())
+				.build();
 
-			// 새로운 토픽으로 메시지 전송
-			kafkaTemplate.send("user-info-response", objectMapper.writeValueAsString(responseMessage));
+			kafkaTemplate.send("user-info-response", objectMapper.writeValueAsString(response));
 		} catch (JsonProcessingException e) {
-			// JSON 파싱 오류 처리
 			log.error("Failed to parse JSON message: {}", message, e);
 		}
 	}
