@@ -15,7 +15,7 @@ import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.kafka.DeleteProfileDto;
 import com.mfc.memberservice.member.dto.kafka.InsertProfileDto;
-import com.mfc.memberservice.member.dto.kafka.RequestAuthInfoDto;
+import com.mfc.memberservice.member.dto.kafka.RequestUserInfoDto;
 import com.mfc.memberservice.member.dto.kafka.RequestMessage;
 import com.mfc.memberservice.member.dto.kafka.ResponseMessage;
 import com.mfc.memberservice.member.dto.kafka.UserProfileResponse;
@@ -34,8 +34,7 @@ public class KafkaConsumer {
 	private final UserRepository userRepository;
 	private final PartnerRepository partnerRepository;
 	private final FavoriteStyleRepository favoriteStyleRepository;
-	private final KafkaTemplate<String, String> kafkaTemplate;
-	private final ObjectMapper objectMapper;
+	private final KafkaTemplate<String, Object> kafkaTemplate;
 
 	@KafkaListener(topics = "profile-insert", containerFactory = "insertProfileListener")
 	public void insertProfile(InsertProfileDto dto) {
@@ -70,11 +69,11 @@ public class KafkaConsumer {
 		favoriteStyleRepository.deleteByUuid(uuid);
 	}
 
-	@KafkaListener(topics = "user-info-request", groupId = "user-info-group")
-	public void handleUserInfoRequest(String message) {
+	@KafkaListener(topics = "user-info-request", containerFactory = "requestUserInfoDtoListener")
+	public void handleUserInfoRequest(RequestUserInfoDto requestUserInfoDto) {
+		log.info("Received user info request: {}", requestUserInfoDto.getUserId());
 		try {
-			RequestAuthInfoDto requestDto = objectMapper.readValue(message, RequestAuthInfoDto.class);
-			String userId = requestDto.getUserId();
+			String userId = requestUserInfoDto.getUserId();
 
 			User user = userRepository.findByUuid(userId)
 				.orElseThrow(() -> new RuntimeException("User not found"));
@@ -84,9 +83,9 @@ public class KafkaConsumer {
 				.userNickName(user.getNickname())
 				.build();
 
-			kafkaTemplate.send("user-info-response", objectMapper.writeValueAsString(response));
-		} catch (JsonProcessingException e) {
-			log.error("Failed to parse JSON message: {}", message, e);
+			kafkaTemplate.send("user-info-response", response);
+		} catch (Exception e) {
+			log.error("Failed to handle user info request: {}", requestUserInfoDto, e);
 		}
 	}
 }
