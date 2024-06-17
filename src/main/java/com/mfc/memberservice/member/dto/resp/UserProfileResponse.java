@@ -1,4 +1,4 @@
-package com.mfc.memberservice.member.dto.kafka;
+package com.mfc.memberservice.member.dto.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfileResponse {
-	private String userId;
 	private String userImageUrl;
 	private String userNickName;
 }

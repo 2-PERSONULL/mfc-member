@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.User;
+import com.mfc.memberservice.member.dto.resp.UserProfileResponse;
 import com.mfc.memberservice.member.dto.req.ModifyUserReqDto;
 import com.mfc.memberservice.member.dto.resp.BodyTypeRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
@@ -133,5 +134,15 @@ public class UserServiceImpl implements UserService {
 	private User isExist(String uuid) {
 		return userRepository.findByUuid(uuid)
 				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+	}
+
+	@Override
+	public UserProfileResponse getNicknameImage(String userId) {
+		User user = isExist(userId);
+
+		return UserProfileResponse.builder()
+				.userNickName(user.getNickname())
+				.userImageUrl(user.getProfileImage())
+				.build();
 	}
 }

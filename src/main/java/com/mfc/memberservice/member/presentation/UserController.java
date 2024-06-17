@@ -5,6 +5,7 @@ import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.common.response.BaseResponse;
-import com.mfc.memberservice.common.response.BaseResponseStatus;
 import com.mfc.memberservice.member.application.UserService;
+import com.mfc.memberservice.member.dto.resp.UserProfileResponse;
 import com.mfc.memberservice.member.dto.req.ModifyUserReqDto;
 import com.mfc.memberservice.member.vo.req.ModifyUserReqVo;
 import com.mfc.memberservice.member.vo.resp.BodyTypeRespVo;
@@ -95,6 +96,14 @@ public class UserController {
 			@RequestHeader(value = "userId", defaultValue = "") String userId) {
 		return new BaseResponse<>(modelMapper.map(
 				userService.getProfile(userId), ProfileRespVo.class));
+	}
+
+	@GetMapping("/nickname-image/{userId}")
+	@Operation(summary = "유저 닉네임 및 프로필 이미지 검색 API", description = "닉네임 및 프로필 이미지 검색")
+	public BaseResponse<UserProfileResponse> getNicknameImage(
+			@PathVariable String userId) {
+		return new BaseResponse<>(modelMapper.map(
+				userService.getNicknameImage(userId), UserProfileResponse.class));
 	}
 
 	private void checkUuid(String uuid) {
