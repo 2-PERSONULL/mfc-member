@@ -70,7 +70,7 @@ public class KafkaConsumer {
 	}
 
 	@KafkaListener(topics = "user-info-request", containerFactory = "requestUserInfoDtoListener")
-	public void handleUserInfoRequest(RequestUserInfoDto requestUserInfoDto) {
+	public synchronized void handleUserInfoRequest(RequestUserInfoDto requestUserInfoDto) {
 		log.info("Received user info request: {}", requestUserInfoDto.getUserId());
 		try {
 			String userId = requestUserInfoDto.getUserId();
