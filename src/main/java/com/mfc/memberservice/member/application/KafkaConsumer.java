@@ -7,8 +7,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.FavoriteStyle;
 import com.mfc.memberservice.member.domain.Partner;
@@ -16,9 +14,7 @@ import com.mfc.memberservice.member.domain.User;
 import com.mfc.memberservice.member.dto.kafka.DeleteProfileDto;
 import com.mfc.memberservice.member.dto.kafka.InsertProfileDto;
 import com.mfc.memberservice.member.dto.kafka.RequestUserInfoDto;
-import com.mfc.memberservice.member.dto.kafka.RequestMessage;
-import com.mfc.memberservice.member.dto.kafka.ResponseMessage;
-import com.mfc.memberservice.member.dto.kafka.UserProfileResponse;
+import com.mfc.memberservice.member.dto.resp.UserProfileResponse;
 import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.UserRepository;
@@ -67,25 +63,5 @@ public class KafkaConsumer {
 		userRepository.deleteByUuid(uuid);
 		partnerRepository.deleteByUuid(uuid);
 		favoriteStyleRepository.deleteByUuid(uuid);
-	}
-
-	@KafkaListener(topics = "user-info-request", containerFactory = "requestUserInfoDtoListener")
-	public synchronized void handleUserInfoRequest(RequestUserInfoDto requestUserInfoDto) {
-		log.info("Received user info request: {}", requestUserInfoDto.getUserId());
-		try {
-			String userId = requestUserInfoDto.getUserId();
-
-			User user = userRepository.findByUuid(userId)
-				.orElseThrow(() -> new RuntimeException("User not found"));
-
-			UserProfileResponse response = UserProfileResponse.builder()
-				.userImageUrl(user.getProfileImage())
-				.userNickName(user.getNickname())
-				.build();
-
-			kafkaTemplate.send("user-info-response", response);
-		} catch (Exception e) {
-			log.error("Failed to handle user info request: {}", requestUserInfoDto, e);
-		}
 	}
 }
