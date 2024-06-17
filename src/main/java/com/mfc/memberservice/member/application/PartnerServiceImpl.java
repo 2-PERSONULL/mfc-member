@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.Career;
+import com.mfc.memberservice.member.domain.FavoriteStyle;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.Sns;
 import com.mfc.memberservice.member.dto.req.CareerReqDto;
@@ -16,10 +17,12 @@ import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerAccountRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnersByStyleRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.mfc.memberservice.member.dto.resp.SnsDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 import com.mfc.memberservice.member.infrastructure.CareerRepository;
+import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
 import com.mfc.memberservice.member.infrastructure.SnsRepository;
 
@@ -32,6 +35,7 @@ public class PartnerServiceImpl implements PartnerService {
 	private final PartnerRepository partnerRepository;
 	private final SnsRepository snsRepository;
 	private final CareerRepository careerRepository;
+	private final FavoriteStyleRepository favoriteStyleRepository;
 
 	@Override
 	public void updateProfileImage(String uuid, ModifyPartnerReqDto dto) {
@@ -248,6 +252,13 @@ public class PartnerServiceImpl implements PartnerService {
 				.nickname(partner.getNickname())
 				.profileImage(partner.getProfileImage())
 				.imageAlt(partner.getImageAlt())
+				.build();
+	}
+
+	@Override
+	public PartnersByStyleRespDto getPartnersByStyle(Long styleId) {
+		return PartnersByStyleRespDto.builder()
+				.partners(favoriteStyleRepository.findByStyleId(styleId))
 				.build();
 	}
 
