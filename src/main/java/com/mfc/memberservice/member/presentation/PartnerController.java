@@ -27,6 +27,7 @@ import com.mfc.memberservice.member.vo.req.UpdateSnsReqVo;
 import com.mfc.memberservice.member.vo.resp.CareerListRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerAccountRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerPortfolioRespVo;
+import com.mfc.memberservice.member.vo.resp.PartnersByStyleRespVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 import com.mfc.memberservice.member.vo.resp.SnsListRespVo;
 
@@ -179,6 +180,13 @@ public class PartnerController {
 			@RequestHeader(value = "partnerId", defaultValue = "") String partnerId) {
 		return new BaseResponse<>(modelMapper.map(
 				partnerService.getProfile(partnerId), ProfileRespVo.class));
+	}
+
+	@GetMapping("/{styleId}")
+	@Operation(summary = "스타일 별 파트너 목록 조회 API", description = "스타일 별 파트너 id 조회")
+	public BaseResponse<PartnersByStyleRespVo> getPartnersByStyle(@PathVariable Long styleId) {
+		return new BaseResponse<>(modelMapper.map(
+				partnerService.getPartnersByStyle(styleId), PartnersByStyleRespVo.class));
 	}
 
 	private void checkUuid(String uuid) {
