@@ -1,5 +1,6 @@
 package com.mfc.memberservice.member.infrastructure;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,9 @@ import com.mfc.memberservice.member.domain.User;
 public interface PartnerRepository extends JpaRepository<Partner, Long> {
 	Optional<Partner> findByNickname(String nickname);
 	Optional<Partner> findByUuid(String Uuid);
+
+	@Query("SELECT p FROM Partner p WHERE p.uuid IN :partnerIds")
+	List<Partner> findByPartnerIds(@Param("partnerIds") List<String> partnerIds);
 
 	@Modifying(flushAutomatically = true)
 	@Query("Delete from Partner p where p.uuid = :uuid")

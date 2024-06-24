@@ -2,6 +2,8 @@ package com.mfc.memberservice.member.presentation;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mfc.memberservice.common.exception.BaseException;
@@ -27,6 +30,7 @@ import com.mfc.memberservice.member.vo.req.UpdateSnsReqVo;
 import com.mfc.memberservice.member.vo.resp.CareerListRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerAccountRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerPortfolioRespVo;
+import com.mfc.memberservice.member.vo.resp.PartnerProfileListRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnersByStyleRespVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 import com.mfc.memberservice.member.vo.resp.SnsListRespVo;
@@ -187,6 +191,13 @@ public class PartnerController {
 	public BaseResponse<PartnersByStyleRespVo> getPartnersByStyle(@PathVariable Long styleId) {
 		return new BaseResponse<>(modelMapper.map(
 				partnerService.getPartnersByStyle(styleId), PartnersByStyleRespVo.class));
+	}
+
+	@GetMapping("/profiles")
+	@Operation(summary = "파트너 프로필 목록 조회 API", description = "포스팅 목록에 해당하는 파트너 프로필 목록 조회")
+	public BaseResponse<PartnerProfileListRespVo> getPartnerProfiles(@RequestParam List<String> partnerIds) {
+		return new BaseResponse<>(modelMapper.map(
+				partnerService.getPartnerProfiles(partnerIds), PartnerProfileListRespVo.class));
 	}
 
 	private void checkUuid(String uuid) {
