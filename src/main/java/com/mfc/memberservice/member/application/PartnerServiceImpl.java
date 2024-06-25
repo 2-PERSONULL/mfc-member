@@ -2,6 +2,8 @@ package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +19,10 @@ import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerAccountRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnerProfileListRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnersByStyleRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
+import com.mfc.memberservice.member.dto.resp.ProfilesDto;
 import com.mfc.memberservice.member.dto.resp.SnsDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
 import com.mfc.memberservice.member.infrastructure.CareerRepository;
@@ -259,6 +263,25 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnersByStyleRespDto getPartnersByStyle(Long styleId) {
 		return PartnersByStyleRespDto.builder()
 				.partners(favoriteStyleRepository.findByStyleId(styleId))
+				.build();
+	}
+
+	@Override
+	public PartnerProfileListRespDto getPartnerProfiles(List<String> partnerIds) {
+		return PartnerProfileListRespDto.builder()
+				.profiles(partnerRepository.findByPartnerIds(partnerIds)
+						.stream()
+						.map(ProfilesDto::new)
+						.toList())
+				.build();
+	}
+
+	@Override
+	public PartnersByStyleRespDto getPartnersByStyles(String uuid) {
+		List<Long> styleIds = favoriteStyleRepository.findStyleIdsByUuid(uuid);
+
+		return PartnersByStyleRespDto.builder()
+				.partners(favoriteStyleRepository.findByStyleIds(styleIds))
 				.build();
 	}
 
