@@ -276,6 +276,15 @@ public class PartnerServiceImpl implements PartnerService {
 				.build();
 	}
 
+	@Override
+	public PartnersByStyleRespDto getPartnersByStyles(String uuid) {
+		List<Long> styleIds = favoriteStyleRepository.findStyleIdsByUuid(uuid);
+
+		return PartnersByStyleRespDto.builder()
+				.partners(favoriteStyleRepository.findByStyleIds(styleIds))
+				.build();
+	}
+
 	private Partner isExist(String uuid) {
 		return partnerRepository.findByUuid(uuid)
 				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));

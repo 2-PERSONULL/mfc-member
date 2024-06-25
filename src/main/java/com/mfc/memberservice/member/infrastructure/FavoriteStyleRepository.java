@@ -17,4 +17,10 @@ public interface FavoriteStyleRepository extends JpaRepository<FavoriteStyle, Lo
 
 	@Query("select fs.uuid from FavoriteStyle fs where fs.styleId = :styleId")
 	List<String> findByStyleId(@Param("styleId") Long styleId);
+
+	@Query("select distinct fs.uuid from FavoriteStyle fs where fs.styleId in :styleIds")
+	List<String> findByStyleIds(@Param("styleIds") List<Long> styleIds);
+
+	@Query("select fs.styleId from FavoriteStyle fs where fs.uuid = :uuid")
+	List<Long> findStyleIdsByUuid(@Param("uuid") String uuid);
 }

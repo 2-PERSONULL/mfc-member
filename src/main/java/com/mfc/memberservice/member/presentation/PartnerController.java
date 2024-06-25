@@ -200,6 +200,13 @@ public class PartnerController {
 				partnerService.getPartnerProfiles(partnerIds), PartnerProfileListRespVo.class));
 	}
 
+	@GetMapping("/styles/{userId}")
+	@Operation(summary = "스타일 목록 별 파트너 목록 조회 API", description = "스타일 목록에 해당하는 파트너 목록 조회 (ID)")
+	public BaseResponse<PartnersByStyleRespVo> getPartnersByStyles(@PathVariable String userId) {
+		return new BaseResponse<>(modelMapper.map(
+				partnerService.getPartnersByStyles(userId), PartnersByStyleRespVo.class));
+	}
+
 	private void checkUuid(String uuid) {
 		if(!StringUtils.hasText(uuid)) {
 			throw new BaseException(NO_REQUIRED_HEADER);

@@ -31,4 +31,5 @@ public interface PartnerService {
 	ProfileRespDto getProfile(String partnerId);
 	PartnersByStyleRespDto getPartnersByStyle(Long styleId);
 	PartnerProfileListRespDto getPartnerProfiles(List<String> partnerIds);
+	PartnersByStyleRespDto getPartnersByStyles(String uuid);
 }
