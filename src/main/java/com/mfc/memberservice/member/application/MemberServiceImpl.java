@@ -10,6 +10,7 @@ import com.mfc.memberservice.common.jwt.JwtTokenProvider;
 import com.mfc.memberservice.member.domain.FavoriteStyle;
 import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.User;
+import com.mfc.memberservice.member.dto.kafka.PartnerSummaryDto;
 import com.mfc.memberservice.member.dto.req.ModifyFavoriteStyleReqDto;
 import com.mfc.memberservice.member.dto.resp.FavoriteStyleRespDto;
 import com.mfc.memberservice.member.dto.resp.SignInRespDto;
@@ -28,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
 	private final FavoriteStyleRepository favoriteStyleRepository;
 
 	private final JwtTokenProvider tokenProvider;
+	private final KafkaProducer producer;
 
 	@Transactional(readOnly = true)
 	@Override
@@ -80,9 +82,13 @@ public class MemberServiceImpl implements MemberService {
 			if(partnerRepository.findByUuid(uuid).isEmpty()) {
 				partnerRepository.save(Partner.builder()
 						.uuid(uuid)
-						.nickname("partner" + (int) (Math.random() * 9000) + 1000)
+						.nickname("partner" + (int)(Math.random() * 9000) + 1000)
 						.build()
 				);
+
+				producer.createPartner(PartnerSummaryDto.builder()
+						.partnerId(uuid)
+						.build());
 			}
 		} else if(role.equals("PARTNER")) {
 			if(userRepository.findByUuid(uuid).isEmpty()) {
