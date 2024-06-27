@@ -5,6 +5,7 @@ import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +32,7 @@ import com.mfc.memberservice.member.vo.resp.CareerListRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerAccountRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerPortfolioRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnerProfileListRespVo;
+import com.mfc.memberservice.member.vo.resp.PartnerRankingRespVo;
 import com.mfc.memberservice.member.vo.resp.PartnersByStyleRespVo;
 import com.mfc.memberservice.member.vo.resp.ProfileRespVo;
 import com.mfc.memberservice.member.vo.resp.SnsListRespVo;
@@ -205,6 +207,13 @@ public class PartnerController {
 	public BaseResponse<PartnersByStyleRespVo> getPartnersByStyles(@PathVariable String userId) {
 		return new BaseResponse<>(modelMapper.map(
 				partnerService.getPartnersByStyles(userId), PartnersByStyleRespVo.class));
+	}
+
+	@GetMapping("/ranking")
+	@Operation(summary = "파트너 랭킹 조회 API", description = "파트너 랭킹 목록 조회 (30명)")
+	public BaseResponse<PartnerRankingRespVo> getPartnerRanking() {
+		return new BaseResponse<>(modelMapper.map(
+				partnerService.getPartnerRanking(), PartnerRankingRespVo.class));
 	}
 
 	private void checkUuid(String uuid) {

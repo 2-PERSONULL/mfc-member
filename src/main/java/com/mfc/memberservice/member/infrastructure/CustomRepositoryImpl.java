@@ -6,6 +6,7 @@ import static com.mfc.memberservice.member.domain.QStyle.*;
 import java.util.List;
 
 import com.mfc.memberservice.member.dto.resp.FavoriteStyleDto;
+import com.mfc.memberservice.member.dto.resp.FavoriteStylesDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -27,6 +28,20 @@ public class CustomRepositoryImpl implements CustomRepository {
 				.on(favoriteStyle.styleId.eq(style.id))
 				.where(favoriteStyle.uuid.eq(uuid))
 				.fetch();
+	}
 
+	@Override
+	public List<FavoriteStylesDto> getFavoriteStyles(List<String> partnerIds) {
+		return query
+				.select(Projections.constructor(FavoriteStylesDto.class,
+						favoriteStyle.id.as("favoriteId"),
+						style.id.as("styleId"),
+						style.name.as("name"),
+						favoriteStyle.uuid.as("partnerId")))
+				.from(favoriteStyle)
+				.join(style)
+				.on(favoriteStyle.styleId.eq(style.id))
+				.where(favoriteStyle.uuid.in(partnerIds))
+				.fetch();
 	}
 }
