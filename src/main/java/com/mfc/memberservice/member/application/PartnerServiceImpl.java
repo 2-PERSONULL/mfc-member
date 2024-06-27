@@ -2,11 +2,16 @@ package com.mfc.memberservice.member.application;
 
 import static com.mfc.memberservice.common.response.BaseResponseStatus.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mfc.memberservice.common.client.BatchClient;
 import com.mfc.memberservice.common.exception.BaseException;
 import com.mfc.memberservice.member.domain.Career;
 import com.mfc.memberservice.member.domain.FavoriteStyle;
@@ -14,17 +19,24 @@ import com.mfc.memberservice.member.domain.Partner;
 import com.mfc.memberservice.member.domain.Sns;
 import com.mfc.memberservice.member.dto.req.CareerReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyPartnerReqDto;
+import com.mfc.memberservice.member.dto.req.PartnerRankingReqDto;
+import com.mfc.memberservice.member.dto.req.PartnerSummaryReqDto;
 import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
 import com.mfc.memberservice.member.dto.resp.CareerDto;
 import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
+import com.mfc.memberservice.member.dto.resp.FavoriteStylesDto;
 import com.mfc.memberservice.member.dto.resp.PartnerAccountRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerProfileListRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnerRankingDto;
+import com.mfc.memberservice.member.dto.resp.PartnerRankingRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnersByStyleRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfilesDto;
 import com.mfc.memberservice.member.dto.resp.SnsDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
+import com.mfc.memberservice.member.dto.resp.StyleDto;
+import com.mfc.memberservice.member.dto.resp.StyleValueDto;
 import com.mfc.memberservice.member.infrastructure.CareerRepository;
 import com.mfc.memberservice.member.infrastructure.FavoriteStyleRepository;
 import com.mfc.memberservice.member.infrastructure.PartnerRepository;
@@ -40,6 +52,8 @@ public class PartnerServiceImpl implements PartnerService {
 	private final SnsRepository snsRepository;
 	private final CareerRepository careerRepository;
 	private final FavoriteStyleRepository favoriteStyleRepository;
+
+	private final BatchClient batchClient;
 
 	@Override
 	public void updateProfileImage(String uuid, ModifyPartnerReqDto dto) {
@@ -285,8 +299,53 @@ public class PartnerServiceImpl implements PartnerService {
 				.build();
 	}
 
+	@Override
+	public PartnerRankingRespDto getPartnerRanking() {
+		List<PartnerSummaryReqDto> ranking = batchClient.getPartnerRanking().getResult().getPartners();
+
+		return PartnerRankingRespDto.builder()
+				.partners(getPartners(ranking))
+				.build();
+	}
+
 	private Partner isExist(String uuid) {
 		return partnerRepository.findByUuid(uuid)
 				.orElseThrow(() -> new BaseException(MEMBER_NOT_FOUND));
+	}
+
+	private List<PartnerRankingDto> getPartners(List<PartnerSummaryReqDto> ranking) {
+		List<String> partnerIds = ranking.stream()
+				.map(PartnerSummaryReqDto::getPartnerId)
+				.toList();
+
+		Map<String, Partner> partners = partnerRepository.findByPartnerIds(partnerIds).stream()
+				.collect(Collectors.toMap(Partner::getUuid, partner -> partner));
+
+		Map<String, List<StyleValueDto>> styles =
+				favoriteStyleRepository.getFavoriteStyles(partnerIds).stream()
+						.collect(Collectors.groupingBy(
+								FavoriteStylesDto::getPartnerId,
+								Collectors.mapping(
+										StyleValueDto::new, Collectors.toList()
+								)
+						));
+
+		return ranking.stream()
+				.map(partner -> {
+					Partner profile = partners.get(partner.getPartnerId());
+					List<StyleValueDto> style = styles.getOrDefault(partner.getPartnerId(),
+							Collections.emptyList());
+
+					return PartnerRankingDto.builder()
+							.partnerId(partner.getPartnerId())
+							.nickname(profile.getNickname())
+							.profileImage(profile.getProfileImage())
+							.alt(profile.getImageAlt())
+							.followerCnt(partner.getFollowerCnt())
+							.coordinateCnt(partner.getCoordinateCnt())
+							.averageStar(partner.getAverageStar())
+							.styles(style)
+							.build();
+				}).toList();
 	}
 }

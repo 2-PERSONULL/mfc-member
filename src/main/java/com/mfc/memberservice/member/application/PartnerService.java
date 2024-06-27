@@ -2,6 +2,8 @@ package com.mfc.memberservice.member.application;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import com.mfc.memberservice.member.dto.req.CareerReqDto;
 import com.mfc.memberservice.member.dto.req.ModifyPartnerReqDto;
 import com.mfc.memberservice.member.dto.req.UpdateSnsReqDto;
@@ -9,6 +11,7 @@ import com.mfc.memberservice.member.dto.resp.CareerListRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerAccountRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerPortfolioRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnerProfileListRespDto;
+import com.mfc.memberservice.member.dto.resp.PartnerRankingRespDto;
 import com.mfc.memberservice.member.dto.resp.PartnersByStyleRespDto;
 import com.mfc.memberservice.member.dto.resp.ProfileRespDto;
 import com.mfc.memberservice.member.dto.resp.SnsListRespDto;
@@ -32,4 +35,5 @@ public interface PartnerService {
 	PartnersByStyleRespDto getPartnersByStyle(Long styleId);
 	PartnerProfileListRespDto getPartnerProfiles(List<String> partnerIds);
 	PartnersByStyleRespDto getPartnersByStyles(String uuid);
+	PartnerRankingRespDto getPartnerRanking();
 }
